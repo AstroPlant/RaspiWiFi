@@ -1,5 +1,7 @@
 RaspiWiFi
 
+Forked from jasbur/RaspiWifi for setting up Wifi, AstroPlant credentials and LED actuators.
+
 RaspiWiFi is a program to headlessly configure a Raspberry Pi's WiFi
 connection using using any other WiFi-enabled device (much like the way
 a Chromecast or similar device can be configured). RaspiWiFi has been
