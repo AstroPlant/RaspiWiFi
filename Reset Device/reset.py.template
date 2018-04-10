@@ -36,12 +36,12 @@ while True:
             os.system('rm -f /home/pi/Projects/RaspiWifi/tmp/*')
             os.system('sudo rm -f /home/pi/astroplant-kit/astroplant_kit/kit_config.json')
             os.system('crontab -u pi -l | grep -v "@reboot cd /home/pi/astroplant-kit/astroplant_kit && python3 core.py >> /home/pi/core.log" | crontab -u pi -')
-            os.system('sudo cp -r /home/pi/RaspiWifi/Reset\ Device/static_files/dhcpd.conf /etc/dhcp/')
-            os.system('sudo cp -r /home/pi/RaspiWifi/Reset\ Device/static_files/hostapd.conf /etc/hostapd/')
-            os.system('sudo cp -r /home/pi/RaspiWifi/Reset\ Device/static_files/interfaces.aphost /etc/network/interfaces')
-            os.system('sudo cp -r /home/pi/RaspiWifi/Reset\ Device/static_files/isc-dhcp-server.aphost /etc/default/isc-dhcp-server')
+            os.system('sudo cp -r [[project_dir]]/Reset\ Device/static_files/dhcpd.conf /etc/dhcp/')
+            os.system('sudo cp -r [[project_dir]]/Reset\ Device/static_files/hostapd.conf /etc/hostapd/')
+            os.system('sudo cp -r [[project_dir]]/Reset\ Device/static_files/interfaces.aphost /etc/network/interfaces')
+            os.system('sudo cp -r [[project_dir]]/Reset\ Device/static_files/isc-dhcp-server.aphost /etc/default/isc-dhcp-server')
             os.system('rm /etc/cron.raspiwifi/apclient_bootstrapper')
-            os.system('sudo cp -r /home/pi/RaspiWifi/Reset\ Device/static_files/aphost_bootstrapper /etc/cron.raspiwifi/')
+            os.system('sudo cp -r [[project_dir]]/Reset\ Device/static_files/aphost_bootstrapper /etc/cron.raspiwifi/')
             os.system('sudo reboot')
 
         if GPIO.input(7) == 1:
