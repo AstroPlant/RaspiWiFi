@@ -1,6 +1,6 @@
 RaspiWiFi
 
-Forked from jasbur/RaspiWifi for setting up Wifi, AstroPlant credentials and LED actuators.
+Forked from jasbur/RaspiWifi for setting up Wifi, AstroPlant credentials.
 
 RaspiWiFi is a program to headlessly configure a Raspberry Pi's WiFi
 connection using using any other WiFi-enabled device (much like the way
@@ -55,11 +55,21 @@ specified.
 
 RESETTING THE DEVICE:
 
-== If GPIO 18 is pulled HIGH for 10 seconds or more the Raspberry Pi will reset
+== If GPIO 7 is pulled HIGH for 10 seconds or more the Raspberry Pi will reset
 all settings, reboot, and enter "Configuration Mode" again. It's useful to have
-a simple button wired on GPIO 18 to reset easily if moving to a new location,
+a simple button wired on GPIO 7 to reset easily if moving to a new location,
 or if incorrect connection information is ever entered. Just press and hold for
 10 seconds or longer.
 
 == You can also reset the device by running the manual_reset.py in the
 "Reset Device" directory
+
+DEPENDENCIES:
+AstroPlant astroplant-kit, astroplant-api-python-client, astroplant-peripheral-device-library need to be installed. Current configuration expects astroplant-kit under /home/pi/.
+
+KEY FILES ADJUSTED:
+	- Configuration App/app/models/main.rb adjusted to create JSON file and crontab conf.
+	- Configuration App/app/views/main/index.html.erb view adjusted to enter credentials.
+	- Configuration App/app/controllers/main_controller.rb additional functions added.
+	- /Reset Device/reset.py.template adjusted for cron job removal and GPIO 7 push button settings
+

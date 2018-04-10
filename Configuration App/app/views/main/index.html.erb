@@ -17,6 +17,22 @@
       <li>
         <%=password_field_tag(:wifi_key, nil, class: "wifiNetworkInputs")%>
       </li>
+	<li><%=label_tag(:api_url, "Your API url")%></li>
+      <li>
+        <%=text_field_tag(:api_url, nil, class: "wifiNetworkInputs")%>
+      </li>
+	<li><%=label_tag(:ws_url, "Your Websocket url")%></li>
+      <li>
+        <%=text_field_tag(:ws_url, nil, class: "wifiNetworkInputs")%>
+      </li>
+	<li><%=label_tag(:auth_serial, "Your serial key")%></li>
+      <li>
+        <%=text_field_tag(:auth_serial, nil, class: "wifiNetworkInputs")%>
+      </li>
+	<li><%=label_tag(:auth_secret, "Your password")%></li>
+      <li>
+        <%=text_field_tag(:auth_secret, nil, class: "wifiNetworkInputs")%>
+      </li>
 
       <%=submit_tag("Connect!", class: "wifiConnectButton")%>
     </ul>

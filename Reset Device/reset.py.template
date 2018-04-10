@@ -5,7 +5,7 @@ import fileinput
 import subprocess
 
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(18, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(7, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 counter = 0
 serial_last_four = subprocess.check_output(['cat', '/proc/cpuinfo'])[-5:-1].decode('utf-8')
@@ -23,28 +23,28 @@ for line in hostapd_conf:
     else:
         hostapd_conf.close
 
-# This is the main logic loop waiting for a button to be pressed on GPIO 18 for 10 seconds.
+# This is the main logic loop waiting for a button to be pressed on GPIO 7 for 10 seconds.
 # If that happens the device will reset to its AP Host mode allowing for reconfiguration on a new network.
 while True:
-    while GPIO.input(18) == 1:
+    while GPIO.input(7) == 0:
         time.sleep(1)
         counter = counter + 1
 
-        print(counter)
-
         if counter == 9:
-            os.system('aplay [[project_dir]]/Reset\ Device/button_chime.wav')
+            os.system('aplay /home/pi/RaspiWifi/Reset\ Device/button_chime.wav')
             os.system('sudo rm -f /etc/wpa_supplicant/wpa_supplicant.conf')
             os.system('rm -f /home/pi/Projects/RaspiWifi/tmp/*')
-            os.system('sudo cp -r [[project_dir]]/Reset\ Device/static_files/dhcpd.conf /etc/dhcp/')
-            os.system('sudo cp -r [[project_dir]]/Reset\ Device/static_files/hostapd.conf /etc/hostapd/')
-            os.system('sudo cp -r [[project_dir]]/Reset\ Device/static_files/interfaces.aphost /etc/network/interfaces')
-            os.system('sudo cp -r [[project_dir]]/Reset\ Device/static_files/isc-dhcp-server.aphost /etc/default/isc-dhcp-server')
+            os.system('sudo rm -f /home/pi/astroplant-kit/astroplant_kit/kit_config.json')
+            os.system('crontab -u pi -l | grep -v "@reboot cd /home/pi/astroplant-kit/astroplant_kit && python3 core.py >> /home/pi/core.log" | crontab -u pi -')
+            os.system('sudo cp -r /home/pi/RaspiWifi/Reset\ Device/static_files/dhcpd.conf /etc/dhcp/')
+            os.system('sudo cp -r /home/pi/RaspiWifi/Reset\ Device/static_files/hostapd.conf /etc/hostapd/')
+            os.system('sudo cp -r /home/pi/RaspiWifi/Reset\ Device/static_files/interfaces.aphost /etc/network/interfaces')
+            os.system('sudo cp -r /home/pi/RaspiWifi/Reset\ Device/static_files/isc-dhcp-server.aphost /etc/default/isc-dhcp-server')
             os.system('rm /etc/cron.raspiwifi/apclient_bootstrapper')
-            os.system('sudo cp -r [[project_dir]]/Reset\ Device/static_files/aphost_bootstrapper /etc/cron.raspiwifi/')
+            os.system('sudo cp -r /home/pi/RaspiWifi/Reset\ Device/static_files/aphost_bootstrapper /etc/cron.raspiwifi/')
             os.system('sudo reboot')
 
-        if GPIO.input(18) == 0:
+        if GPIO.input(7) == 1:
             counter = 0
             break
 

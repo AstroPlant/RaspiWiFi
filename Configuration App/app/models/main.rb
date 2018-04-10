@@ -1,3 +1,4 @@
+
 class Main < ActiveRecord::Base
 
 	def self.scan_wifi_networks
@@ -64,7 +65,7 @@ class Main < ActiveRecord::Base
 
   def self.create_wpa_supplicant(user_ssid, encryption_type, user_wifi_key)
 		temp_conf_file = File.new('../tmp/wpa_supplicant.conf.tmp', 'w')
-
+                 
     if encryption_type == 'WPA2'
       temp_conf_file.puts 'ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev'
       temp_conf_file.puts 'update_config=1'
@@ -83,8 +84,6 @@ class Main < ActiveRecord::Base
       temp_conf_file.puts '	ssid="' + user_ssid + '"'
       temp_conf_file.puts '	proto=WPA RSN'
       temp_conf_file.puts '	key_mgmt=WPA-PSK'
-      temp_conf_file.puts '	pairwise=CCMP PSK'
-      temp_conf_file.puts '	group=CCMP TKIP'
       temp_conf_file.puts '	psk="' + user_wifi_key + '"'
       temp_conf_file.puts '}'
     elsif encryption_type == 'open'
@@ -97,10 +96,45 @@ class Main < ActiveRecord::Base
     end
 
 		temp_conf_file.close
-
+              
 		system('sudo cp -r ../tmp/wpa_supplicant.conf.tmp /etc/wpa_supplicant/wpa_supplicant.conf')
+              
 		system('rm ../tmp/wpa_supplicant.conf.tmp')
+
+
 	end
+
+  def self.create_astroplant_config(user_api_url, user_ws_url, user_auth_serial ,user_auth_secret)
+		kit_temp_conf_file = File.new('/home/pi/astroplant-kit/astroplant_kit/kit_config.json', 'w')
+
+    
+    kit_temp_conf_file.puts '{'
+    kit_temp_conf_file.puts '    "api": {'
+    kit_temp_conf_file.puts '        "root": "'+user_api_url+'"'
+    kit_temp_conf_file.puts '    },'
+    kit_temp_conf_file.puts '    "websockets": {'
+    kit_temp_conf_file.puts '        "url": "'+user_ws_url+'"'
+    kit_temp_conf_file.puts '    },'
+    kit_temp_conf_file.puts '    "auth": {'
+    kit_temp_conf_file.puts '        "serial": "'+user_auth_serial+'",'
+    kit_temp_conf_file.puts '        "secret": "'+user_auth_secret+'"'
+    kit_temp_conf_file.puts '    },'
+    kit_temp_conf_file.puts '    "debug": {'
+    kit_temp_conf_file.puts '        "level": "INFO",'
+    kit_temp_conf_file.puts '        "peripheral_display": {'
+    kit_temp_conf_file.puts '            "module_name": "peripheral",'
+    kit_temp_conf_file.puts '            "class_name": "Display"'
+    kit_temp_conf_file.puts '        }'
+    kit_temp_conf_file.puts '    }'
+    kit_temp_conf_file.puts '}'
+		
+
+		kit_temp_conf_file.close
+		system('(crontab -l 2>/home/pi/log_pigpiod.txt; echo \'@reboot sudo pigpiod\'; ) |  sort - | uniq - | crontab -')
+		system('(crontab -u pi -l 2>/home/pi/logcron.txt; echo \'@reboot cd /home/pi/astroplant-kit/astroplant_kit && python3 core.py >> /home/pi/core.log \'; ) |  sort - | uniq - | crontab -u pi - -')
+	
+	end
+
 
   def self.set_ap_client_mode
 	raspiwifi_path = find_raspiwifi_path()
