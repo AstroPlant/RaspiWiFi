@@ -54,8 +54,9 @@ specified.
 
 RESETTING THE DEVICE:
 
-== This install expects GPIO.input 7 to be 1 (default). If the button is pressed 
-for 10 seconds (GPIO.input(7) == 0) or more the Raspberry Pi will reset all 
+== This install expects GPIO.input 7 to be 1 when the RPI is running, when the button
+is pressed the GPIO.input 7 will be 0. If the button is 
+pressed for 10 seconds or more the Raspberry Pi will reset all 
 settings, reboot, and enter "Configuration Mode" again. Just press and hold for
 10 seconds or longer. Before installing this package make sure a button is 
 connected on GPIO7.
