@@ -8,10 +8,11 @@ a Chromecast or similar device can be configured). RaspiWiFi has been
 tested with the Raspberry Pi B+, Raspberry Pi 3, and Raspberry Pi Zero W.
 
 DEPENDENCIES:
-AstroPlant astroplant-kit, astroplant-api-python-client, 
-astroplant-peripheral-device-library need to be installed. 
-Current configuration expects astroplant-kit under /home/pi/.
-A push button connected to GPIO7 (example:http://razzpisampler.oreilly.com/ch07.html).
+	- AstroPlant astroplant-kit, astroplant-api-python-client, 
+	  astroplant-peripheral-device-library need to be installed. 
+	- Current configuration expects astroplant-kit under /home/pi/.
+	- A push button connected to GPIO7 (example:http://razzpisampler.oreilly.com/ch07.html).
+	- pigpio library.
 
 KEY FILES ADJUSTED:
 	- Configuration App/app/models/main.rb adjusted to create JSON file and crontab conf.
