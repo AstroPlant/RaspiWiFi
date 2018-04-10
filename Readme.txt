@@ -55,16 +55,21 @@ specified.
 
 RESETTING THE DEVICE:
 
-== GPIO7 in this install expects GPIO.input 7 to be 1. If the button is pressed for 10 seconds (GPIO.input(7) == 0) or more the Raspberry Pi will reset all settings, reboot, and enter "Configuration Mode" again. It's useful to have
+== GPIO7 in this install expects GPIO.input 7 to be 1. If the button is pressed 
+for 10 seconds (GPIO.input(7) == 0) or more the Raspberry Pi will reset all 
+settings, reboot, and enter "Configuration Mode" again. It's useful to have
 a simple button wired on GPIO 7 to reset easily if moving to a new location,
 or if incorrect connection information is ever entered. Just press and hold for
-10 seconds or longer. Before installing this package make sure a button is connected on GPIO7 (example:http://razzpisampler.oreilly.com/ch07.html)
+10 seconds or longer. Before installing this package make sure a button is 
+connected on GPIO7 (example:http://razzpisampler.oreilly.com/ch07.html)
 
 == You can also reset the device by running the manual_reset.py in the
 "Reset Device" directory
 
 DEPENDENCIES:
-AstroPlant astroplant-kit, astroplant-api-python-client, astroplant-peripheral-device-library need to be installed. Current configuration expects astroplant-kit under /home/pi/.
+AstroPlant astroplant-kit, astroplant-api-python-client, 
+astroplant-peripheral-device-library need to be installed. 
+Current configuration expects astroplant-kit under /home/pi/.
 
 KEY FILES ADJUSTED:
 	- Configuration App/app/models/main.rb adjusted to create JSON file and crontab conf.
