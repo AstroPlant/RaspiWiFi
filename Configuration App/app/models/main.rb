@@ -123,7 +123,7 @@ class Main < ActiveRecord::Base
     kit_temp_conf_file.puts '        "level": "INFO",'
     kit_temp_conf_file.puts '        "peripheral_display": {'
     kit_temp_conf_file.puts '            "module_name": "peripheral",'
-    kit_temp_conf_file.puts '            "class_name": "BlackHoleDisplay",'
+    kit_temp_conf_file.puts '            "class_name": "BlackHoleDisplay"'
     kit_temp_conf_file.puts '        }'
     kit_temp_conf_file.puts '    }'
     kit_temp_conf_file.puts '}'
