@@ -1,53 +1,11 @@
-import subprocess
-import fileinput
 import os
 import sys
+import setup_lib
 
 
-def install_prereqs():
-	project_path = os.path.dirname(os.path.abspath(__file__))
-	
-	os.system('clear')
-	os.system('apt update')
-	os.system('clear')
-	os.system('apt install python3 python3-rpi.gpio bundler nodejs libsqlite3-dev isc-dhcp-server hostapd libxml2-dev libxslt-dev -y')
-	os.system('clear')
-	os.system('gem install nokogiri --no-document -v 1.6.6.2 -- --use-system-libraries')
-	os.system('clear')
-	os.system('bundle install --gemfile=' + project_path + '/Configuration\ App/Gemfile')
-	os.system('clear')
+if os.getuid():
+    sys.exit('You need root access to install!')
 
-def update_config_paths():
-	project_path = os.path.dirname(os.path.abspath(__file__))
-
-	os.system('sudo cp -a Reset\ Device/static_files/apclient_bootstrapper.template Reset\ Device/static_files/apclient_bootstrapper')
-	os.system('sudo cp -a Reset\ Device/static_files/aphost_bootstrapper.template Reset\ Device/static_files/aphost_bootstrapper')
-	os.system('sudo cp -a Reset\ Device/reset.py.template Reset\ Device/reset.py')
-	os.system('sudo cp -a Reset\ Device/manual_reset.py.template Reset\ Device/manual_reset.py')
-
-	with fileinput.FileInput("Reset Device/static_files/aphost_bootstrapper", inplace=True) as file:
-		for line in file:
-			print(line.replace("[[project_dir]]", project_path), end='')
-		file.close
-
-	with fileinput.FileInput("Reset Device/static_files/apclient_bootstrapper", inplace=True) as file:
-		for line in file:
-			print(line.replace("[[project_dir]]", project_path), end='')
-		file.close
-
-	with fileinput.FileInput("Reset Device/reset.py", inplace=True) as file:
-		for line in file:
-			print(line.replace("[[project_dir]]", project_path), end='')
-		file.close
-		
-	with fileinput.FileInput("Reset Device/manual_reset.py", inplace=True) as file:
-		for line in file:
-			print(line.replace("[[project_dir]]", project_path), end='')
-		file.close
-
-
-#################################################################
-#################################################################
 
 os.system('clear')
 print()
@@ -57,22 +15,24 @@ print("##### RaspiWiFi Intial Setup  #####")
 print("###################################")
 print()
 print()
-install_ans = input("Would you like run the initial RaspiWiFi setup (This can take up to 5 minutes)? (y/n): ")
+entered_ssid = input("Would you like to specify an SSID you'd like to use \nfor Host/Configuration mode? [default: RaspiWiFi Setup]: ")
+print()
+auto_config_choice = input("Would you like to enable \nauto-reconfiguration mode [y/N]?: ")
+print()
+auto_config_delay = input("How long of a delay would you like without an active connection \nbefore auto-reconfiguration triggers (seconds)? [default: 300]: ")
+print()
+server_port_choice = input("Which port would you like to use for the Configuration Page? [default: 80]: ")
+print()
+ssl_enabled_choice = input("Would you like to enable SSL during configuration mode \n(NOTICE: you will get a certificate ID error \nwhen connecting, but traffic will be encrypted) [y/N]?: ")
+os.system('clear')
+print()
+print()
+install_ans = input("Are you ready to commit changes to the system? [y/N]: ")
 
-if(install_ans == 'y'):
-	install_prereqs()
-	update_config_paths()
-
-	os.system('sudo rm -f /etc/wpa_supplicant/wpa_supplicant.conf')
-	os.system('rm -f ./tmp/*')
-	os.system('sudo cp -a ./Reset\ Device/static_files/dhcpd.conf /etc/dhcp/')
-	os.system('sudo cp -a ./Reset\ Device/static_files/hostapd.conf /etc/hostapd/')
-	os.system('sudo cp -a ./Reset\ Device/static_files/interfaces.aphost /etc/network/interfaces')
-	os.system('sudo cp -a ./Reset\ Device/static_files/isc-dhcp-server.aphost /etc/default/isc-dhcp-server')
-	os.system('mkdir /etc/cron.raspiwifi')
-	os.system('sudo cp -a ./Reset\ Device/static_files/aphost_bootstrapper /etc/cron.raspiwifi')
-	os.system('echo "# RaspiWiFi Startup" >> /etc/crontab')
-	os.system('echo "@reboot root run-parts /etc/cron.raspiwifi/" >> /etc/crontab')
+if(install_ans.lower() == 'y'):
+	setup_lib.install_prereqs()
+	setup_lib.copy_configs()
+	setup_lib.update_main_config_file(entered_ssid, auto_config_choice, auto_config_delay, ssl_enabled_choice, server_port_choice)
 else:
 	print()
 	print()
@@ -96,7 +56,7 @@ print("#####################################")
 print()
 print()
 print("Initial setup is complete. A reboot is required to start in WiFi configuration mode...")
-reboot_ans = input("Would you like to do that now? (y/n): ")
+reboot_ans = input("Would you like to do that now? [y/N]: ")
 
-if reboot_ans == 'y':
-	os.system('sudo reboot')
+if reboot_ans.lower() == 'y':
+	os.system('reboot')
