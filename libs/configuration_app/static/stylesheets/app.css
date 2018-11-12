@@ -10,14 +10,14 @@ padding:0;
 }
 
 body{
-    background-color: #000;
+    background-color: #3465A4;
     margin:0;
     color: white;
 }
 
 div#mainContent{
     padding:.3em;
-    background-color: #000;
+    background-color: #3465A4;
     width: 100%;
     margin: 0 auto;
     text-align: center;
@@ -40,10 +40,25 @@ div#mainContent form {
     margin-top:-2em;
 }
 
+label[for=checkbox],
+label[for=I2C_address]{
+    font-size:1.0rem;
+}
+
+label[for=info]{
+    font-size:1.0rem;
+    color:#a10000;
+}
+
 label[for=ssid],
+label[for=api_url],
+label[for=ws_url],
+label[for=auth_serial],
+label[for=auth_secret],
 label[for=wifi_key]{
     font-size:1.9rem;
 }
+
 
 /* Select
 ---------------------------------------------------------*/
@@ -76,8 +91,8 @@ li.wifiNetwork:after {
 select.wifiNetworkInputs {
     position: relative;
     width: 100%;
-    background: #111;
-    color: #999;
+    background: #eaeaea;
+    color: #000;
     border: none;
     outline: none;
     font-size: 1.5rem;
@@ -95,8 +110,16 @@ select.wifiNetworkInputs {
     width: 100%;
     padding:1em;
     font-size: 1.4rem;
-    color: #999;
-    background: #111;
+    color: #000;
+    background: #eaeaea;
+    border:#999 solid 1px;
+}
+.lcdInputs{
+    width: 25%;
+    padding:1em;
+    font-size: 0.8rem;
+    color: #000;
+    background: #eaeaea;
     border:#999 solid 1px;
 }
 
@@ -104,7 +127,7 @@ select.wifiNetworkInputs {
     width: 100%;
     margin:2em 0;
     padding:.5em;
-    background-color: #deab04;
+    background-color: #5cb85c;
     font-size: 2rem;
     color: #fff;
 }

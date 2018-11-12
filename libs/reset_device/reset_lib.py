@@ -52,4 +52,7 @@ def reset_to_host_mode():
 	os.system('mv /etc/dnsmasq.conf /etc/dnsmasq.conf.original')
 	os.system('cp /usr/lib/raspiwifi/reset_device/static_files/dnsmasq.conf /etc/')
 	os.system('cp /usr/lib/raspiwifi/reset_device/static_files/dhcpcd.conf /etc/')
+	os.system('sudo rm -f /home/pi/astroplant-kit/astroplant_kit/kit_config.json')
+	os.system('crontab -u pi -l | grep -v "cd /home/pi/astroplant-kit/astroplant_kit && python3 core.py >> /home/pi/core.log" | crontab -u pi -')
+	os.system('crontab -u pi -l | grep -v "sudo pigpiod" | crontab -u pi -')
 	os.system('reboot')
