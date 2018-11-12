@@ -20,7 +20,10 @@ DEPENDENCIES:
 	  astroplant-peripheral-device-library need to be installed. 
 	- Current configuration expects astroplant-kit under /home/pi/.
 	- A push button connected to GPIO7 (example:http://razzpisampler.oreilly.com/ch07.html).
-	- pigpio library.
+	- A push button connected to GPIO6
+	- pigpio library (sudo apt-get install pigpio python-pigpio python3-pigpio)
+	- cryptography packages (sudo apt-get install build-essential libssl-dev libffi-dev python3-dev)
+	- pyopenssl (pip3 install pyopenssl)
 
  SCRIPT-BASED INSTALLATION INSTRUCTIONS:
 
