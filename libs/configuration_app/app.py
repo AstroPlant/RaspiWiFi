@@ -169,10 +169,8 @@ def set_ap_client_mode():
     os.system('reboot')
 
 def config_file_hash():
-    # config_file = open('/etc/raspiwifi/raspiwifi.conf')
-    # HOOK below
-    print(os.getcwd())
-    config_file = open('./libs/reset_device/static_files/raspiwifi.conf')
+    config_file = open('/etc/raspiwifi/raspiwifi.conf')
+
     config_hash = {}
 
     for line in config_file:
