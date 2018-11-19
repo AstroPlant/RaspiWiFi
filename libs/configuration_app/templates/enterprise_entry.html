@@ -3,26 +3,20 @@
 {% block body %}
   <div id="mainContent">
     <h1>AP WiFi Setup</h1>
-
     <div class="wifiIcon"></div>
     <div><label for="info">{{ info }}</label></div>
     <form action="{{ url_for('save_credentials') }}" method=post>
       <ul>
-        <li><label for="ssid">Select your WiFi network</label></li>
+        <li><label for="ssid">Enter your enterprise network SSID :</label></li>
+        <li><input type="text" name="ssid", class="wifiNetworkInputs"></li>
+        <input name="checker" type="hidden" id="checker" value="1">
+        <li><label for="identity">Your identity (username)</label></li>
+        <li><input type="text" name="identity", class="wifiNetworkInputs"></li>
+         <li><label for="password">Your password</label></li>
+        <li><input type="password" name="password", class="wifiNetworkInputs"></li>
 
-        <li class="wifiNetwork">
-          <select id="ssid" name="ssid", class="wifiNetworkInputs">
-            {% for ssid in wifi_ap_array %}
-              <option value='{{ ssid }}'>{{ ssid }}</option>
-            {% endfor %}
-          </select>
-        </li>
 
-        <li><a href="{{ url_for('manual_ssid_entry') }}" class="manualSSIDEntry">manual SSID entry -></a></li>
-        <li><a href="{{ url_for('enterprise_entry') }}" class="manualSSIDEntry">enterprise (eduroam) entry -></a></li>
-        <li><label for="wifi_key">Your Wifi password</label></li>
-        <li><input type="password" name="wifi_key", class="wifiNetworkInputs"></li>
-	    <li><label for="api_url">Your API url</label></li>
+ 	    <li><label for="api_url">Your API url</label></li>
         <li><input type="text" name="api_url" value="https://my.astroplant.io/api/", class="wifiNetworkInputs"></li>
         <li><label for="ws_url">Your Websocket url</label></li>
         <li><input type="text" name="ws_url"  value="wss://my.astroplant.io/" , class="wifiNetworkInputs"></li>

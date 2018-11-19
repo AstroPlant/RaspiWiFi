@@ -51,6 +51,8 @@ label[for=info]{
 }
 
 label[for=ssid],
+label[for=identity],
+label[for=password],
 label[for=api_url],
 label[for=ws_url],
 label[for=auth_serial],

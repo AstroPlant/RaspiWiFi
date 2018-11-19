@@ -19,6 +19,9 @@ def index():
 def manual_ssid_entry():
     return render_template('manual_ssid_entry.html')
 
+@app.route('/enterprise_entry')
+def enterprise_entry():
+    return render_template('enterprise_entry.html')
 
 @app.route('/save_credentials', methods = ['GET', 'POST'])
 def save_credentials():
@@ -28,13 +31,25 @@ def save_credentials():
     ws_url = request.form.get('ws_url', None)
     auth_serial = request.form.get('auth_serial', None)
     auth_token = request.form.get('auth_secret', None)
-    if if_empty(ssid, wifi_key, api_url, ws_url, auth_token, auth_serial):
-        wifi_ap_array = scan_wifi_networks()
-        info = "Some input fields where empty!"
-        return render_template('app.html', wifi_ap_array=wifi_ap_array, info=info)
-    checked = request.form.get('i2c_check', None)
+    enterprise_id = request.form.get('identity', None)
+    enterprise_pwd = request.form.get('password', None)
+    enterprise_check = request.form.get('checker', None)
+    if enterprise_check == "1":
+        if if_enterprise_empty(ssid, enterprise_id,enterprise_pwd):
+            wifi_ap_array = scan_wifi_networks()
+            info = "Some input fields where empty!"
+            return render_template('enterprise_entry.html', wifi_ap_array=wifi_ap_array, info=info)
+        else:
+            create_enterprise_wpa_supplicant(ssid, enterprise_id, enterprise_pwd)
+    else:
+        if if_empty(ssid, api_url, ws_url, auth_token, auth_serial):
+            wifi_ap_array = scan_wifi_networks()
+            info = "Some input fields where empty!"
+            return render_template('app.html', wifi_ap_array=wifi_ap_array, info=info)
+        else:
+            create_wpa_supplicant(ssid, wifi_key)
 
-    create_wpa_supplicant(ssid, wifi_key)
+    checked = request.form.get('i2c_check', None)
     if checked:
         i2c_address = request.form.get('lcd_address', None)
         if i2c_address:
@@ -93,6 +108,29 @@ def create_wpa_supplicant(ssid, wifi_key):
     temp_conf_file.close
 
     os.system('mv wpa_supplicant.conf.tmp /etc/wpa_supplicant/wpa_supplicant.conf')
+
+def create_enterprise_wpa_supplicant(ssid, identity, password):
+    temp_conf_file = open('wpa_supplicant.conf.tmp', 'w')
+
+    temp_conf_file.write('ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\n')
+    temp_conf_file.write('update_config=1\n')
+    temp_conf_file.write('\n')
+    temp_conf_file.write('network={\n')
+    temp_conf_file.write('	ssid="' + ssid + '"\n')
+    temp_conf_file.write('	scan_ssid=1\n')
+    temp_conf_file.write('	key_mgmt=WPA-EAP\n')
+    temp_conf_file.write('	eap=PEAP\n')
+    temp_conf_file.write('	identity="' + identity + '"\n')
+    temp_conf_file.write('	password="' + password + '"\n')
+    temp_conf_file.write('	phase1="peaplabel=0"\n')
+    temp_conf_file.write('	phase2="auth=MSCHAPV2"\n')
+
+    temp_conf_file.write('	}')
+
+    temp_conf_file.close
+
+    os.system('mv wpa_supplicant.conf.tmp /etc/wpa_supplicant/wpa_supplicant.conf')
+
 
 def create_kit_config_with_lcd(api_url, ws_url, auth_serial, auth_token, i2c_address):
     kit_conf_file = open('kit_config.json.tmp', 'w')
@@ -153,8 +191,14 @@ def create_kit_config(api_url, ws_url, auth_serial, auth_token):
     os.system('(crontab -l 2>/home/pi/log_pigpiod.txt; echo \'@reboot sudo pigpiod\'; ) |  sort - | uniq - | crontab -')
     os.system('(crontab -u pi -l 2>/home/pi/logcron.txt; echo \'@reboot sleep 30; cd /home/pi/astroplant-kit/astroplant_kit && python3 core.py >> /home/pi/core.log \'; ) |  sort - | uniq - | crontab -u pi - -')
 
-def if_empty(ssid, wifi_key, api_url,ws_url,auth_token,auth_serial):
-    if ssid and wifi_key and api_url and ws_url and auth_token and auth_serial is not None:
+def if_empty(ssid, api_url,ws_url,auth_token,auth_serial):
+    if ssid and api_url and ws_url and auth_token and auth_serial is not None:
+        return False
+    else:
+        return True
+
+def if_enterprise_empty(ssid, identity, password):
+    if ssid and identity and password is not None:
         return False
     else:
         return True
@@ -171,7 +215,6 @@ def set_ap_client_mode():
 
 def config_file_hash():
     config_file = open('/etc/raspiwifi/raspiwifi.conf')
-
     config_hash = {}
 
     for line in config_file:
