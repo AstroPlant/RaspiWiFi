@@ -160,6 +160,7 @@ def if_empty(ssid, wifi_key, api_url,ws_url,auth_token,auth_serial):
         return True
 
 def set_ap_client_mode():
+    os.system('rm -f /etc/raspiwifi/host_mode')
     os.system('rm /etc/cron.raspiwifi/aphost_bootstrapper')
     os.system('cp /usr/lib/raspiwifi/reset_device/static_files/apclient_bootstrapper /etc/cron.raspiwifi/')
     os.system('chmod +x /etc/cron.raspiwifi/apclient_bootstrapper')
