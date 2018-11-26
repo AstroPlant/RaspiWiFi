@@ -89,7 +89,7 @@ def actuator_control():
         cron_time(blue_time_on, blue_time_off, "Led.Blue", int_blue)
         cron_time(farred_time_on, farred_time_off, "Led.FarRed", int_farred)
 
-        os.system('timedatectl set-timezone ' + area + '/' + location + '')
+        os.system('sudo timedatectl set-timezone ' + area + '/' + location + '')
 
     # Call set_ap_client_mode() in a thread otherwise the reboot will prevent
     # the response from getting to the browser
