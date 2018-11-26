@@ -1,0 +1,1300 @@
+{
+   "Antarctica":[
+      [
+         "C",
+         "Antarctica/Casey "
+      ],
+      [
+         "D",
+         "Antarctica/Davis "
+      ],
+      [
+         "D",
+         "Antarctica/DumontDUrville "
+      ],
+      [
+         "M",
+         "Antarctica/Macquarie "
+      ],
+      [
+         "M",
+         "Antarctica/Mawson "
+      ],
+      [
+         "P",
+         "Antarctica/Palmer "
+      ],
+      [
+         "R",
+         "Antarctica/Rothera "
+      ],
+      [
+         "S",
+         "Antarctica/Syowa "
+      ],
+      [
+         "T",
+         "Antarctica/Troll "
+      ],
+      [
+         "V",
+         "Antarctica/Vostok "
+      ]
+   ],
+   "Indian":[
+      [
+         "C",
+         "Indian/Chagos "
+      ],
+      [
+         "C",
+         "Indian/Christmas "
+      ],
+      [
+         "C",
+         "Indian/Cocos "
+      ],
+      [
+         "K",
+         "Indian/Kerguelen "
+      ],
+      [
+         "M",
+         "Indian/Mahe "
+      ],
+      [
+         "M",
+         "Indian/Maldives "
+      ],
+      [
+         "M",
+         "Indian/Mauritius "
+      ],
+      [
+         "R",
+         "Indian/Reunion "
+      ]
+   ],
+   "America":[
+      [
+         "A",
+         "America/Adak "
+      ],
+      [
+         "A",
+         "America/Anchorage "
+      ],
+      [
+         "A",
+         "America/Araguaina "
+      ],
+      [
+         "A",
+         "America/Argentina/Catamarca "
+      ],
+      [
+         "A",
+         "America/Argentina/Jujuy "
+      ],
+      [
+         "A",
+         "America/Argentina/La_Rioja "
+      ],
+      [
+         "A",
+         "America/Argentina/Mendoza "
+      ],
+      [
+         "A",
+         "America/Argentina/Rio_Gallegos "
+      ],
+      [
+         "A",
+         "America/Argentina/San_Juan "
+      ],
+      [
+         "A",
+         "America/Argentina/San_Luis "
+      ],
+      [
+         "A",
+         "America/Argentina/Tucuman "
+      ],
+      [
+         "A",
+         "America/Argentina/Ushuaia "
+      ],
+      [
+         "A",
+         "America/Asuncion "
+      ],
+      [
+         "A",
+         "America/Atikokan "
+      ],
+      [
+         "B",
+         "America/Bahia "
+      ],
+      [
+         "B",
+         "America/Bahia_Banderas "
+      ],
+      [
+         "B",
+         "America/Barbados "
+      ],
+      [
+         "B",
+         "America/Belem "
+      ],
+      [
+         "B",
+         "America/Belize "
+      ],
+      [
+         "B",
+         "America/Blanc-Sablon "
+      ],
+      [
+         "B",
+         "America/Boa_Vista "
+      ],
+      [
+         "B",
+         "America/Bogota "
+      ],
+      [
+         "B",
+         "America/Boise "
+      ],
+      [
+         "C",
+         "America/Cambridge_Bay "
+      ],
+      [
+         "C",
+         "America/Campo_Grande "
+      ],
+      [
+         "C",
+         "America/Cancun "
+      ],
+      [
+         "C",
+         "America/Caracas "
+      ],
+      [
+         "C",
+         "America/Cayenne "
+      ],
+      [
+         "C",
+         "America/Chicago "
+      ],
+      [
+         "C",
+         "America/Chihuahua "
+      ],
+      [
+         "C",
+         "America/Costa_Rica "
+      ],
+      [
+         "C",
+         "America/Creston "
+      ],
+      [
+         "C",
+         "America/Cuiaba "
+      ],
+      [
+         "C",
+         "America/Curacao "
+      ],
+      [
+         "D",
+         "America/Danmarkshavn "
+      ],
+      [
+         "D",
+         "America/Dawson "
+      ],
+      [
+         "D",
+         "America/Denver "
+      ],
+      [
+         "D",
+         "America/Detroit "
+      ],
+      [
+         "E",
+         "America/Edmonton "
+      ],
+      [
+         "E",
+         "America/Eirunepe "
+      ],
+      [
+         "E",
+         "America/El_Salvador "
+      ],
+      [
+         "F",
+         "America/Fort_Nelson "
+      ],
+      [
+         "G",
+         "America/Glace_Bay "
+      ],
+      [
+         "G",
+         "America/Godthab "
+      ],
+      [
+         "G",
+         "America/Goose_Bay "
+      ],
+      [
+         "G",
+         "America/Grand_Turk "
+      ],
+      [
+         "G",
+         "America/Guatemala "
+      ],
+      [
+         "G",
+         "America/Guayaquil "
+      ],
+      [
+         "G",
+         "America/Guyana "
+      ],
+      [
+         "H",
+         "America/Halifax "
+      ],
+      [
+         "H",
+         "America/Havana "
+      ],
+      [
+         "H",
+         "America/Hermosillo "
+      ],
+      [
+         "I",
+         "America/Indiana/Indianapolis "
+      ],
+      [
+         "I",
+         "America/Indiana/Knox "
+      ],
+      [
+         "I",
+         "America/Indiana/Marengo "
+      ],
+      [
+         "I",
+         "America/Indiana/Petersburg "
+      ],
+      [
+         "I",
+         "America/Indiana/Tell_City "
+      ],
+      [
+         "I",
+         "America/Indiana/Vevay "
+      ],
+      [
+         "I",
+         "America/Indiana/Winamac "
+      ],
+      [
+         "I",
+         "America/Inuvik "
+      ],
+      [
+         "I",
+         "America/Iqaluit "
+      ],
+      [
+         "J",
+         "America/Jamaica "
+      ],
+      [
+         "J",
+         "America/Juneau "
+      ],
+      [
+         "K",
+         "America/Kentucky/Louisville "
+      ],
+      [
+         "K",
+         "America/Kentucky/Monticello "
+      ],
+      [
+         "L",
+         "America/La_Paz "
+      ],
+      [
+         "L",
+         "America/Lima "
+      ],
+      [
+         "L",
+         "America/Los_Angeles "
+      ],
+      [
+         "M",
+         "America/Managua "
+      ],
+      [
+         "M",
+         "America/Manaus "
+      ],
+      [
+         "M",
+         "America/Martinique "
+      ],
+      [
+         "M",
+         "America/Menominee "
+      ],
+      [
+         "M",
+         "America/Metlakatla "
+      ],
+      [
+         "M",
+         "America/Mexico_City "
+      ],
+      [
+         "M",
+         "America/Miquelon "
+      ],
+      [
+         "M",
+         "America/Moncton "
+      ],
+      [
+         "M",
+         "America/Montevideo "
+      ],
+      [
+         "N",
+         "America/Nassau "
+      ],
+      [
+         "N",
+         "America/New_York "
+      ],
+      [
+         "N",
+         "America/Nome "
+      ],
+      [
+         "N",
+         "America/Noronha "
+      ],
+      [
+         "N",
+         "America/North_Dakota/Beulah "
+      ],
+      [
+         "N",
+         "America/North_Dakota/Center "
+      ],
+      [
+         "N",
+         "America/North_Dakota/New_Salem "
+      ],
+      [
+         "O",
+         "America/Ojinaga "
+      ],
+      [
+         "P",
+         "America/Panama "
+      ],
+      [
+         "P",
+         "America/Pangnirtung "
+      ],
+      [
+         "P",
+         "America/Paramaribo "
+      ],
+      [
+         "P",
+         "America/Phoenix "
+      ],
+      [
+         "P",
+         "America/Port_of_Spain "
+      ],
+      [
+         "P",
+         "America/Port-au-Prince "
+      ],
+      [
+         "P",
+         "America/Porto_Velho "
+      ],
+      [
+         "P",
+         "America/Puerto_Rico "
+      ],
+      [
+         "P",
+         "America/Punta_Arenas "
+      ],
+      [
+         "R",
+         "America/Rankin_Inlet "
+      ],
+      [
+         "R",
+         "America/Recife "
+      ],
+      [
+         "R",
+         "America/Regina "
+      ],
+      [
+         "R",
+         "America/Resolute "
+      ],
+      [
+         "R",
+         "America/Rio_Branco "
+      ],
+      [
+         "S",
+         "America/Santarem "
+      ],
+      [
+         "S",
+         "America/Santiago "
+      ],
+      [
+         "S",
+         "America/Santo_Domingo "
+      ],
+      [
+         "S",
+         "America/Scoresbysund "
+      ],
+      [
+         "S",
+         "America/Sitka "
+      ],
+      [
+         "S",
+         "America/St_Johns "
+      ],
+      [
+         "S",
+         "America/Swift_Current "
+      ],
+      [
+         "T",
+         "America/Tegucigalpa "
+      ],
+      [
+         "T",
+         "America/Thule "
+      ],
+      [
+         "T",
+         "America/Thunder_Bay "
+      ],
+      [
+         "T",
+         "America/Tijuana "
+      ],
+      [
+         "V",
+         "America/Vancouver "
+      ],
+      [
+         "W",
+         "America/Whitehorse "
+      ],
+      [
+         "W",
+         "America/Winnipeg "
+      ],
+      [
+         "Y",
+         "America/Yakutat "
+      ],
+      [
+         "Y",
+         "America/Yellowknife "
+      ]
+   ],
+   "Africa":[
+      [
+         "A",
+         "Africa/Abidjan "
+      ],
+      [
+         "A",
+         "Africa/Accra "
+      ],
+      [
+         "A",
+         "Africa/Algiers "
+      ],
+      [
+         "B",
+         "Africa/Bissau "
+      ],
+      [
+         "C",
+         "Africa/Cairo "
+      ],
+      [
+         "C",
+         "Africa/Casablanca "
+      ],
+      [
+         "E",
+         "Africa/El_Aaiun "
+      ],
+      [
+         "J",
+         "Africa/Johannesburg "
+      ],
+      [
+         "J",
+         "Africa/Juba "
+      ],
+      [
+         "K",
+         "Africa/Khartoum "
+      ],
+      [
+         "L",
+         "Africa/Lagos "
+      ],
+      [
+         "M",
+         "Africa/Maputo "
+      ],
+      [
+         "M",
+         "Africa/Monrovia "
+      ],
+      [
+         "N",
+         "Africa/Nairobi "
+      ],
+      [
+         "N",
+         "Africa/Ndjamena "
+      ],
+      [
+         "T",
+         "Africa/Tripoli "
+      ],
+      [
+         "T",
+         "Africa/Tunis "
+      ],
+      [
+         "W",
+         "Africa/Windhoek "
+      ]
+   ],
+   "Pacific":[
+      [
+         "A",
+         "Pacific/Apia "
+      ],
+      [
+         "A",
+         "Pacific/Auckland "
+      ],
+      [
+         "B",
+         "Pacific/Bougainville "
+      ],
+      [
+         "C",
+         "Pacific/Chatham "
+      ],
+      [
+         "E",
+         "Pacific/Easter "
+      ],
+      [
+         "E",
+         "Pacific/Efate "
+      ],
+      [
+         "E",
+         "Pacific/Enderbury "
+      ],
+      [
+         "F",
+         "Pacific/Fakaofo "
+      ],
+      [
+         "F",
+         "Pacific/Fiji "
+      ],
+      [
+         "F",
+         "Pacific/Funafuti "
+      ],
+      [
+         "G",
+         "Pacific/Galapagos "
+      ],
+      [
+         "G",
+         "Pacific/Gambier "
+      ],
+      [
+         "G",
+         "Pacific/Guadalcanal "
+      ],
+      [
+         "G",
+         "Pacific/Guam "
+      ],
+      [
+         "H",
+         "Pacific/Honolulu "
+      ],
+      [
+         "K",
+         "Pacific/Kiritimati "
+      ],
+      [
+         "K",
+         "Pacific/Kosrae "
+      ],
+      [
+         "K",
+         "Pacific/Kwajalein "
+      ],
+      [
+         "M",
+         "Pacific/Majuro "
+      ],
+      [
+         "M",
+         "Pacific/Marquesas "
+      ],
+      [
+         "N",
+         "Pacific/Nauru "
+      ],
+      [
+         "N",
+         "Pacific/Niue "
+      ],
+      [
+         "N",
+         "Pacific/Norfolk "
+      ],
+      [
+         "N",
+         "Pacific/Noumea "
+      ],
+      [
+         "P",
+         "Pacific/Pago_Pago "
+      ],
+      [
+         "P",
+         "Pacific/Palau "
+      ],
+      [
+         "P",
+         "Pacific/Pitcairn "
+      ],
+      [
+         "P",
+         "Pacific/Pohnpei "
+      ],
+      [
+         "P",
+         "Pacific/Port_Moresby "
+      ],
+      [
+         "R",
+         "Pacific/Rarotonga "
+      ],
+      [
+         "T",
+         "Pacific/Tahiti "
+      ],
+      [
+         "T",
+         "Pacific/Tarawa "
+      ],
+      [
+         "T",
+         "Pacific/Tongatapu "
+      ],
+      [
+         "W",
+         "Pacific/Wake "
+      ],
+      [
+         "W",
+         "Pacific/Wallis "
+      ]
+   ],
+   "Asia":[
+      [
+         "A",
+         "Asia/Almaty "
+      ],
+      [
+         "A",
+         "Asia/Amman "
+      ],
+      [
+         "A",
+         "Asia/Anadyr "
+      ],
+      [
+         "A",
+         "Asia/Aqtau "
+      ],
+      [
+         "A",
+         "Asia/Aqtobe "
+      ],
+      [
+         "A",
+         "Asia/Ashgabat "
+      ],
+      [
+         "A",
+         "Asia/Atyrau "
+      ],
+      [
+         "B",
+         "Asia/Baghdad "
+      ],
+      [
+         "B",
+         "Asia/Baku "
+      ],
+      [
+         "B",
+         "Asia/Bangkok "
+      ],
+      [
+         "B",
+         "Asia/Barnaul "
+      ],
+      [
+         "B",
+         "Asia/Beirut "
+      ],
+      [
+         "B",
+         "Asia/Bishkek "
+      ],
+      [
+         "B",
+         "Asia/Brunei "
+      ],
+      [
+         "C",
+         "Asia/Chita "
+      ],
+      [
+         "C",
+         "Asia/Colombo "
+      ],
+      [
+         "D",
+         "Asia/Damascus "
+      ],
+      [
+         "D",
+         "Asia/Dhaka "
+      ],
+      [
+         "D",
+         "Asia/Dili "
+      ],
+      [
+         "D",
+         "Asia/Dubai "
+      ],
+      [
+         "D",
+         "Asia/Dushanbe "
+      ],
+      [
+         "F",
+         "Asia/Famagusta "
+      ],
+      [
+         "G",
+         "Asia/Gaza "
+      ],
+      [
+         "H",
+         "Asia/Hebron "
+      ],
+      [
+         "H",
+         "Asia/Ho_Chi_Minh "
+      ],
+      [
+         "H",
+         "Asia/Hong_Kong "
+      ],
+      [
+         "J",
+         "Asia/Jayapura "
+      ],
+      [
+         "J",
+         "Asia/Jerusalem "
+      ],
+      [
+         "K",
+         "Asia/Kabul "
+      ],
+      [
+         "K",
+         "Asia/Kamchatka "
+      ],
+      [
+         "K",
+         "Asia/Karachi "
+      ],
+      [
+         "K",
+         "Asia/Kathmandu "
+      ],
+      [
+         "K",
+         "Asia/Kolkata "
+      ],
+      [
+         "K",
+         "Asia/Krasnoyarsk "
+      ],
+      [
+         "K",
+         "Asia/Kuala_Lumpur "
+      ],
+      [
+         "M",
+         "Asia/Macau "
+      ],
+      [
+         "M",
+         "Asia/Magadan "
+      ],
+      [
+         "M",
+         "Asia/Manila "
+      ],
+      [
+         "N",
+         "Asia/Novokuznetsk "
+      ],
+      [
+         "N",
+         "Asia/Novosibirsk "
+      ],
+      [
+         "O",
+         "Asia/Omsk "
+      ],
+      [
+         "O",
+         "Asia/Oral "
+      ],
+      [
+         "P",
+         "Asia/Pyongyang "
+      ],
+      [
+         "Q",
+         "Asia/Qatar "
+      ],
+      [
+         "Q",
+         "Asia/Qyzylorda "
+      ],
+      [
+         "R",
+         "Asia/Riyadh "
+      ],
+      [
+         "S",
+         "Asia/Sakhalin "
+      ],
+      [
+         "S",
+         "Asia/Samarkand "
+      ],
+      [
+         "S",
+         "Asia/Seoul "
+      ],
+      [
+         "S",
+         "Asia/Shanghai "
+      ],
+      [
+         "S",
+         "Asia/Singapore "
+      ],
+      [
+         "S",
+         "Asia/Srednekolymsk "
+      ],
+      [
+         "T",
+         "Asia/Taipei "
+      ],
+      [
+         "T",
+         "Asia/Tashkent "
+      ],
+      [
+         "T",
+         "Asia/Tbilisi "
+      ],
+      [
+         "T",
+         "Asia/Tehran "
+      ],
+      [
+         "T",
+         "Asia/Thimphu "
+      ],
+      [
+         "T",
+         "Asia/Tokyo "
+      ],
+      [
+         "T",
+         "Asia/Tomsk "
+      ],
+      [
+         "U",
+         "Asia/Ulaanbaatar "
+      ],
+      [
+         "U",
+         "Asia/Urumqi "
+      ],
+      [
+         "U",
+         "Asia/Ust-Nera "
+      ],
+      [
+         "V",
+         "Asia/Vladivostok "
+      ],
+      [
+         "Y",
+         "Asia/Yakutsk "
+      ],
+      [
+         "Y",
+         "Asia/Yangon "
+      ],
+      [
+         "Y",
+         "Asia/Yekaterinburg "
+      ],
+      [
+         "Y",
+         "Asia/Yerevan "
+      ]
+   ],
+   "Europe":[
+      [
+         "A",
+         "Europe/Amsterdam "
+      ],
+      [
+         "A",
+         "Europe/Andorra "
+      ],
+      [
+         "A",
+         "Europe/Astrakhan "
+      ],
+      [
+         "A",
+         "Europe/Athens "
+      ],
+      [
+         "B",
+         "Europe/Belgrade "
+      ],
+      [
+         "B",
+         "Europe/Berlin "
+      ],
+      [
+         "B",
+         "Europe/Brussels "
+      ],
+      [
+         "B",
+         "Europe/Bucharest "
+      ],
+      [
+         "B",
+         "Europe/Budapest "
+      ],
+      [
+         "C",
+         "Europe/Chisinau "
+      ],
+      [
+         "C",
+         "Europe/Copenhagen "
+      ],
+      [
+         "D",
+         "Europe/Dublin "
+      ],
+      [
+         "G",
+         "Europe/Gibraltar "
+      ],
+      [
+         "H",
+         "Europe/Helsinki "
+      ],
+      [
+         "I",
+         "Europe/Istanbul "
+      ],
+      [
+         "K",
+         "Europe/Kaliningrad "
+      ],
+      [
+         "K",
+         "Europe/Kiev "
+      ],
+      [
+         "K",
+         "Europe/Kirov "
+      ],
+      [
+         "L",
+         "Europe/Lisbon "
+      ],
+      [
+         "L",
+         "Europe/London "
+      ],
+      [
+         "L",
+         "Europe/Luxembourg "
+      ],
+      [
+         "M",
+         "Europe/Madrid "
+      ],
+      [
+         "M",
+         "Europe/Malta "
+      ],
+      [
+         "M",
+         "Europe/Minsk "
+      ],
+      [
+         "M",
+         "Europe/Monaco "
+      ],
+      [
+         "M",
+         "Europe/Moscow "
+      ],
+      [
+         "N",
+         "Europe/Nicosia "
+      ],
+      [
+         "O",
+         "Europe/Oslo "
+      ],
+      [
+         "P",
+         "Europe/Paris "
+      ],
+      [
+         "P",
+         "Europe/Prague "
+      ],
+      [
+         "R",
+         "Europe/Riga "
+      ],
+      [
+         "R",
+         "Europe/Rome "
+      ],
+      [
+         "S",
+         "Europe/Saratov "
+      ],
+      [
+         "S",
+         "Europe/Simferopol "
+      ],
+      [
+         "S",
+         "Europe/Sofia "
+      ],
+      [
+         "S",
+         "Europe/Stockholm "
+      ],
+      [
+         "T",
+         "Europe/Tallinn "
+      ],
+      [
+         "T",
+         "Europe/Tirane "
+      ],
+      [
+         "U",
+         "Europe/Ulyanovsk "
+      ],
+      [
+         "U",
+         "Europe/Uzhgorod "
+      ],
+      [
+         "V",
+         "Europe/Vienna "
+      ],
+      [
+         "V",
+         "Europe/Vilnius "
+      ],
+      [
+         "V",
+         "Europe/Volgograd "
+      ],
+      [
+         "W",
+         "Europe/Warsaw "
+      ],
+      [
+         "Z",
+         "Europe/Zaporozhye "
+      ],
+      [
+         "Z",
+         "Europe/Zurich "
+      ]
+   ],
+   "Atlantic":[
+      [
+         "A",
+         "Atlantic/Azores "
+      ],
+      [
+         "B",
+         "Atlantic/Bermuda "
+      ],
+      [
+         "C",
+         "Atlantic/Canary "
+      ],
+      [
+         "C",
+         "Atlantic/Cape_Verde "
+      ],
+      [
+         "F",
+         "Atlantic/Faroe "
+      ],
+      [
+         "M",
+         "Atlantic/Madeira "
+      ],
+      [
+         "R",
+         "Atlantic/Reykjavik "
+      ],
+      [
+         "S",
+         "Atlantic/South_Georgia "
+      ],
+      [
+         "S",
+         "Atlantic/Stanley "
+      ]
+   ],
+   "Australia":[
+      [
+         "A",
+         "Australia/Adelaide "
+      ],
+      [
+         "B",
+         "Australia/Brisbane "
+      ],
+      [
+         "B",
+         "Australia/Broken_Hill "
+      ],
+      [
+         "C",
+         "Australia/Currie "
+      ],
+      [
+         "D",
+         "Australia/Darwin "
+      ],
+      [
+         "E",
+         "Australia/Eucla "
+      ],
+      [
+         "H",
+         "Australia/Hobart "
+      ],
+      [
+         "L",
+         "Australia/Lindeman "
+      ],
+      [
+         "L",
+         "Australia/Lord_Howe "
+      ],
+      [
+         "M",
+         "Australia/Melbourne "
+      ],
+      [
+         "P",
+         "Australia/Perth "
+      ],
+      [
+         "S",
+         "Australia/Sydney "
+      ]
+   ]
+}

@@ -14,7 +14,6 @@ def index():
     info = ""
     return render_template('app.html', wifi_ap_array = wifi_ap_array, info=info)
 
-
 @app.route('/manual_ssid_entry')
 def manual_ssid_entry():
     return render_template('manual_ssid_entry.html')
@@ -35,20 +34,9 @@ def save_credentials():
     enterprise_pwd = request.form.get('password', None)
     enterprise_check = request.form.get('checker', None)
     if enterprise_check == "1":
-        if if_enterprise_empty(ssid, enterprise_id,enterprise_pwd):
-            wifi_ap_array = scan_wifi_networks()
-            info = "Some input fields where empty!"
-            return render_template('enterprise_entry.html', wifi_ap_array=wifi_ap_array, info=info)
-        else:
             create_enterprise_wpa_supplicant(ssid, enterprise_id, enterprise_pwd)
     else:
-        if if_empty(ssid, api_url, ws_url, auth_token, auth_serial):
-            wifi_ap_array = scan_wifi_networks()
-            info = "Some input fields where empty!"
-            return render_template('app.html', wifi_ap_array=wifi_ap_array, info=info)
-        else:
             create_wpa_supplicant(ssid, wifi_key)
-
     checked = request.form.get('i2c_check', None)
     if checked:
         i2c_address = request.form.get('lcd_address', None)
@@ -61,6 +49,48 @@ def save_credentials():
     else:
         create_kit_config(api_url, ws_url, auth_serial, auth_token)
 
+    return render_template('save_credentials.html', ssid = ssid)
+
+@app.route('/actuator_control', methods = ['GET', 'POST'])
+def actuator_control():
+    act_chck = request.form.get('chkControl', None)
+    if act_chck is not None:
+        area = request.form.get('area', None)
+        location = request.form.get('location', None)
+        fans_gpio = request.form.get('fans_gpio', None)
+        fans_time_on = request.form.get('fans_time_on', None)
+        fans_time_off = request.form.get('fans_time_off', None)
+        red_gpio = request.form.get('red_gpio', None)
+        red_time_on = request.form.get('red_time_on', None)
+        red_time_off = request.form.get('red_time_off', None)
+        blue_gpio = request.form.get('blue_gpio', None)
+        blue_time_on = request.form.get('blue_time_on', None)
+        blue_time_off = request.form.get('blue_time_off', None)
+        farred_gpio = request.form.get('farred_gpio', None)
+        farred_time_on = request.form.get('farred_time_on', None)
+        farred_time_off= request.form.get('farred_time_off', None)
+        int_farred = request.form.get('int_farred', None)
+        int_blue = request.form.get('int_blue', None)
+        int_red = request.form.get('int_red', None)
+        # quick (dirty) fix for the following
+        if area == 'base' or location == 'Please choose from above' or area == '' or location == '':
+            info = "You have to select the area and location."
+            return render_template('save_credentials.html', info=info)
+        if if_schedule_empty(fans_gpio,fans_time_on,fans_time_off,red_gpio,red_time_off,red_time_on,blue_gpio,
+                             blue_time_off,blue_time_on,farred_gpio,farred_time_off,farred_time_on, int_blue, int_red,
+                             int_farred):
+            info = "You have to fill in all schedule details."
+            return render_template('save_credentials.html', info=info)
+        set_gpio_config(fans_gpio, red_gpio, blue_gpio, farred_gpio)
+        # configure cron
+        os.system('(crontab -u pi -l 2>/home/pi/logcron.txt; echo \'@reboot cd /home/pi/astrogeeks-actuator-control && ./controld \'; ) |  sort - | uniq - | crontab -u pi -')
+        cron_time(fans_time_on, fans_time_off, "Fan", "1")
+        cron_time(red_time_on, red_time_off, "Led.Red", int_red)
+        cron_time(blue_time_on, blue_time_off, "Led.Blue", int_blue)
+        cron_time(farred_time_on, farred_time_off, "Led.FarRed", int_farred)
+
+        os.system('timedatectl set-timezone ' + area + '/' + location + '')
+
     # Call set_ap_client_mode() in a thread otherwise the reboot will prevent
     # the response from getting to the browser
     def sleep_and_start_ap():
@@ -68,11 +98,7 @@ def save_credentials():
         set_ap_client_mode()
     t = Thread(target=sleep_and_start_ap)
     t.start()
-
-    return render_template('save_credentials.html', ssid = ssid)
-
-
-
+    return render_template('completed.html')
 
 ######## FUNCTIONS ##########
 
@@ -128,6 +154,7 @@ def create_enterprise_wpa_supplicant(ssid, identity, password):
     temp_conf_file.write('	}')
 
     temp_conf_file.close
+
 
     os.system('mv wpa_supplicant.conf.tmp /etc/wpa_supplicant/wpa_supplicant.conf')
 
@@ -191,18 +218,85 @@ def create_kit_config(api_url, ws_url, auth_serial, auth_token):
     os.system('(crontab -l 2>/home/pi/log_pigpiod.txt; echo \'@reboot sudo pigpiod\'; ) |  sort - | uniq - | crontab -')
     os.system('(crontab -u pi -l 2>/home/pi/logcron.txt; echo \'@reboot sleep 30; cd /home/pi/astroplant-kit/astroplant_kit && python3 core.py >> /home/pi/core.log \'; ) |  sort - | uniq - | crontab -u pi - -')
 
-def if_empty(ssid, api_url,ws_url,auth_token,auth_serial):
-    if ssid and api_url and ws_url and auth_token and auth_serial is not None:
+def if_schedule_empty(fans_gpio,fans_time_on,fans_time_off,red_gpio,red_time_off,red_time_on,blue_gpio,
+                             blue_time_off,blue_time_on,farred_gpio,farred_time_off,farred_time_on,int_blue, int_red,
+                             int_farred):
+    if fans_gpio and fans_time_on and fans_time_off and red_gpio and red_time_off and red_time_on and blue_gpio and \
+            blue_time_off and blue_time_on and farred_gpio and farred_time_off and farred_time_on and int_blue and int_red and int_farred:
         return False
     else:
         return True
 
-def if_enterprise_empty(ssid, identity, password):
-    if ssid and identity and password is not None:
-        return False
-    else:
-        return True
+def set_gpio_config(fans_gpio, red_gpio, blue_gpio, farred_gpio):
+    config = open('config.json.tmp', 'w')
 
+    if fans_gpio == 'old':
+        base_str = '    { "className": "Fan", "name": "Fan", "pin": 20 },\n' \
+                   '    { "className": "Fan", "name": "Fan", "pin": 21 }\n'
+    else:
+        base_str = '     { "className": "Fan", "name": "Fan", "pin": '+fans_gpio+' }\n'
+    config.write('{\n')
+    config.write(' "actuators": [\n')
+    config.write('     { "className": "Led", "name": "Led.Blue", "pin": '+blue_gpio+' },\n')
+    config.write('     { "className": "Led", "name": "Led.Red", "pin": '+red_gpio+' },\n')
+    config.write('     { "className": "Led", "name": "Led.FarRed", "pin": '+farred_gpio+' },\n')
+    config.write(base_str)
+    config.write(' ]\n')
+    config.write('}')
+
+    os.system('mv config.json.tmp /home/pi/astrogeeks-actuator-control/config.json')
+
+def cron_time(on ,off, name, parameter):
+    on = int(on.split(':', 1)[0])
+    off = int(off.split(':', 1)[0])
+
+    if on < off:
+        if on  == off - 1:
+            cmd_on = str(on)
+        else:
+            # for start time the "on" stays the same and "off" is -1
+            cmd_on = str(on) + "-" + str(off-1)
+        if on - 1 <= 0:
+            if off != 23:
+            # edge case
+                cmd_off = str(off) + "-" + "23"
+            else:
+                cmd_off = str(off)
+        else:
+            # for stop time the "start to stop" is the same as original off and the "stop" is on -1
+            cmd_off = str(off) + "-" + "23" + ",0" + "-" + str(on - 1)
+    elif on > off:
+        if off -1 == 0:
+            #edge case
+            cmd_on = str(on) + "-" + "23" + "," + str(off - 1)
+        elif off -1 < 0:
+            cmd_on = str(on)
+        else:
+            cmd_on = str(on) + "-" + "23" + ",0" + "-" + str(off -1)
+
+        cmd_off = str(off) + "-" + str(on-1)
+    else:
+        # the start time is the same as stop time, the assumption is that it should run continuously
+        cmd_on = str(on)
+        cmd_off = None
+
+    if cmd_off is not None:
+        os.system('(crontab -u pi -l 2>/home/pi/logschedule.txt; echo \'* '+ cmd_on + ' * * * '
+                  'cd /home/pi/astrogeeks-actuator-control && ./control "'+name+'" '+parameter+' \'; ) '
+                  '|  sort - | uniq - | crontab -u pi - ')
+        if name != "Fan":
+            os.system('(crontab -u pi -l 2>/home/pi/logschedule.txt; echo \'* '+ cmd_off + ' * * * '
+                      'cd /home/pi/astrogeeks-actuator-control && ./control "'+name+'" 0.0 \'; ) '
+                      '|  sort - | uniq - | crontab -u pi - ')
+        else:
+            os.system('(crontab -u pi -l 2>/home/pi/logschedule.txt; echo \'* '+ cmd_off + ' * * * '
+                      'cd /home/pi/astrogeeks-actuator-control && ./control "'+name+'" 0 \'; ) '
+                      '|  sort - | uniq - | crontab -u pi - ')
+    else:
+        os.system('(crontab -u pi -l 2>/home/pi/logschedule.txt; echo \'* '+ cmd_on + ' * * * '
+                  'cd /home/pi/astrogeeks-actuator-control && ./control "'+name+'" '+parameter+' \'; ) '
+                  '|  sort - | uniq - | crontab -u pi - ')
+    
 def set_ap_client_mode():
     os.system('rm -f /etc/raspiwifi/host_mode')
     os.system('rm /etc/cron.raspiwifi/aphost_bootstrapper')
@@ -223,7 +317,6 @@ def config_file_hash():
         config_hash[line_key] = line_value
 
     return config_hash
-
 
 if __name__ == '__main__':
     config_hash = config_file_hash()

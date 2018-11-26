@@ -8,22 +8,22 @@
     <form action="{{ url_for('save_credentials') }}" method=post>
       <ul>
         <li><label for="ssid">Enter your enterprise network SSID :</label></li>
-        <li><input type="text" name="ssid", class="wifiNetworkInputs"></li>
+        <li><input type="text" name="ssid", class="wifiNetworkInputs" required></li>
         <input name="checker" type="hidden" id="checker" value="1">
         <li><label for="identity">Your identity (username)</label></li>
-        <li><input type="text" name="identity", class="wifiNetworkInputs"></li>
+        <li><input type="text" name="identity", class="wifiNetworkInputs" required></li>
          <li><label for="password">Your password</label></li>
-        <li><input type="password" name="password", class="wifiNetworkInputs"></li>
+        <li><input type="password" name="password", class="wifiNetworkInputs" required></li>
 
 
  	    <li><label for="api_url">Your API url</label></li>
-        <li><input type="text" name="api_url" value="https://my.astroplant.io/api/", class="wifiNetworkInputs"></li>
+        <li><input type="text" name="api_url" value="https://my.astroplant.io/api/", class="wifiNetworkInputs" required></li>
         <li><label for="ws_url">Your Websocket url</label></li>
-        <li><input type="text" name="ws_url"  value="wss://my.astroplant.io/" , class="wifiNetworkInputs"></li>
+        <li><input type="text" name="ws_url"  value="wss://my.astroplant.io/" , class="wifiNetworkInputs" required></li>
         <li><label for="auth_serial">Your serial key</label></li>
-        <li><input type="text" name="auth_serial", class="wifiNetworkInputs"></li>
+        <li><input type="text" name="auth_serial", class="wifiNetworkInputs" required></li>
         <li><label for="auth_secret">Your AstroPlant token</label></li>
-        <li><input type="text" name="auth_secret", class="wifiNetworkInputs"></li>
+        <li><input type="text" name="auth_secret", class="wifiNetworkInputs" required></li>
         <li><label for="checkbox">Is the AstroPlant LCD screen connected?</label><input type="checkbox" name="i2c_check" onclick="var input = document.getElementById('lcd_address'); if(this.checked){ input.disabled = false; input.focus();}else{input.disabled=true;}" /></li>
         <li><label for="I2C_address">LCD I2C address (default value is 0x27):</label><input type="text" id="lcd_address" name="lcd_address" disabled="disabled", class="lcdInputs"/></li>
 
