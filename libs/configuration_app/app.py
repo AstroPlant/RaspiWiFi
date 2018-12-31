@@ -92,7 +92,7 @@ def actuator_control():
         set_gpio_config(fans_gpio, red_gpio, blue_gpio, farred_gpio, sensor_fans_gpio)
 
         # configure cron
-        os.system('(crontab -u sidney -l 2>/home/pi/logcron.txt; echo \'@reboot cd /home/pi/astrogeeks-actuator-control && ./controld \'; ) |  sort - | uniq - | crontab -u sidney -')
+        os.system('(crontab -u pi -l 2>/home/pi/logcron.txt; echo \'@reboot cd /home/pi/astrogeeks-actuator-control && ./controld \'; ) |  sort - | uniq - | crontab -u pi -')
         cron_time(fans_time_on, fans_time_off, "Fan", "1")
         if sensor_fans_gpio != 'old':
             cron_time(sensor_fans_time_on, sensor_fans_time_off, "Sensor_Fan", "1")
@@ -200,7 +200,7 @@ def create_kit_config_with_lcd(api_url, ws_url, auth_serial, auth_token, i2c_add
 
     os.system('mv kit_config.json.tmp /home/pi/astroplant-kit/astroplant_kit/kit_config.json')
     os.system('(crontab -l 2>/home/pi/log_pigpiod.txt; echo \'@reboot sudo pigpiod\'; ) |  sort - | uniq - | crontab -')
-    os.system('(crontab -u sidney -l 2>/home/pi/logcron.txt; echo \'@reboot sleep 30; cd /home/pi/astroplant-kit/astroplant_kit && python3 core.py >> /home/pi/core.log \'; ) |  sort - | uniq - | crontab -u sidney - -')
+    os.system('(crontab -u pi -l 2>/home/pi/logcron.txt; echo \'@reboot sleep 30; cd /home/pi/astroplant-kit/astroplant_kit && python3 core.py >> /home/pi/core.log \'; ) |  sort - | uniq - | crontab -u pi - -')
 
 def create_kit_config(api_url, ws_url, auth_serial, auth_token):
     kit_conf_file = open('kit_config.json.tmp', 'w')
@@ -228,7 +228,7 @@ def create_kit_config(api_url, ws_url, auth_serial, auth_token):
 
     os.system('mv kit_config.json.tmp /home/pi/astroplant-kit/astroplant_kit/kit_config.json')
     os.system('(crontab -l 2>/home/pi/log_pigpiod.txt; echo \'@reboot sudo pigpiod\'; ) |  sort - | uniq - | crontab -')
-    os.system('(crontab -u sidney -l 2>/home/pi/logcron.txt; echo \'@reboot sleep 30; cd /home/pi/astroplant-kit/astroplant_kit && python3 core.py >> /home/pi/core.log \'; ) |  sort - | uniq - | crontab -u sidney - -')
+    os.system('(crontab -u pi -l 2>/home/pi/logcron.txt; echo \'@reboot sleep 30; cd /home/pi/astroplant-kit/astroplant_kit && python3 core.py >> /home/pi/core.log \'; ) |  sort - | uniq - | crontab -u pi - -')
 
 def if_schedule_empty(fans_gpio,fans_time_on,fans_time_off,sensor_fans_gpio,sensor_fans_time_on,sensor_fans_time_off,
                       red_gpio,red_time_off,red_time_on,blue_gpio,blue_time_off,blue_time_on,farred_gpio,farred_time_off,
@@ -296,21 +296,21 @@ def cron_time(on ,off, name, parameter):
         cmd_off = None
 
     if cmd_off is not None:
-        os.system('(crontab -u sidney -l 2>/home/sidney/logschedule.txt; echo \'* '+ cmd_on + ' * * * '
+        os.system('(crontab -u pi -l 2>/home/pi/logschedule.txt; echo \'* '+ cmd_on + ' * * * '
                   'cd /home/pi/astrogeeks-actuator-control && ./control "'+name+'" '+parameter+' \'; ) '
-                  '|  sort - | uniq - | crontab -u sidney - ')
+                  '|  sort - | uniq - | crontab -u pi - ')
         if name != "Fan" and name != "Sensor_Fan":
-            os.system('(crontab -u sidney -l 2>/home/sidney/logschedule.txt; echo \'* '+ cmd_off + ' * * * '
+            os.system('(crontab -u pi -l 2>/home/pi/logschedule.txt; echo \'* '+ cmd_off + ' * * * '
                       'cd /home/pi/astrogeeks-actuator-control && ./control "'+name+'" 0.0 \'; ) '
-                      '|  sort - | uniq - | crontab -u sidney - ')
+                      '|  sort - | uniq - | crontab -u pi - ')
         else:
-            os.system('(crontab -u sidney -l 2>/home/sidney/logschedule.txt; echo \'* '+ cmd_off + ' * * * '
+            os.system('(crontab -u pi -l 2>/home/pi/logschedule.txt; echo \'* '+ cmd_off + ' * * * '
                       'cd /home/pi/astrogeeks-actuator-control && ./control "'+name+'" 0 \'; ) '
-                      '|  sort - | uniq - | crontab -u sidney - ')
+                      '|  sort - | uniq - | crontab -u pi - ')
     else:
-        os.system('(crontab -u sidney -l 2>/home/sidney/logschedule.txt; echo \'* '+ cmd_on + ' * * * '
+        os.system('(crontab -u pi -l 2>/home/pi/logschedule.txt; echo \'* '+ cmd_on + ' * * * '
                   'cd /home/pi/astrogeeks-actuator-control && ./control "'+name+'" '+parameter+' \'; ) '
-                  '|  sort - | uniq - | crontab -u sidney - ')
+                  '|  sort - | uniq - | crontab -u pi - ')
     
 def set_ap_client_mode():
     os.system('rm -f /etc/raspiwifi/host_mode')
