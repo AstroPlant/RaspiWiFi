@@ -60,6 +60,9 @@ def actuator_control():
         fans_gpio = request.form.get('fans_gpio', None)
         fans_time_on = request.form.get('fans_time_on', None)
         fans_time_off = request.form.get('fans_time_off', None)
+        sensor_fans_gpio = request.form.get('sensor_fans_gpio', None)
+        sensor_fans_time_on = request.form.get('sensor_fans_time_on', None)
+        sensor_fans_time_off = request.form.get('sensor_fans_time_off', None)
         red_gpio = request.form.get('red_gpio', None)
         red_time_on = request.form.get('red_time_on', None)
         red_time_off = request.form.get('red_time_off', None)
@@ -76,20 +79,29 @@ def actuator_control():
         if area == 'base' or location == 'Please choose from above' or area == '' or location == '':
             info = "You have to select the area and location."
             return render_template('save_credentials.html', info=info)
-        if if_schedule_empty(fans_gpio,fans_time_on,fans_time_off,red_gpio,red_time_off,red_time_on,blue_gpio,
+        if if_schedule_empty(fans_gpio,fans_time_on,fans_time_off,sensor_fans_gpio,sensor_fans_time_on,sensor_fans_time_off,red_gpio,red_time_off,red_time_on,blue_gpio,
                              blue_time_off,blue_time_on,farred_gpio,farred_time_off,farred_time_on, int_blue, int_red,
                              int_farred):
             info = "You have to fill in all schedule details."
             return render_template('save_credentials.html', info=info)
-        set_gpio_config(fans_gpio, red_gpio, blue_gpio, farred_gpio)
+        if fans_gpio == 'old' and sensor_fans_gpio != 'old':
+            return render_template('save_credentials.html', info="You selected settings for an old development fan in combination with a new default sensor fan. Please make sure to have either dev or default settings consistently")
+        if fans_gpio != 'old' and sensor_fans_gpio == 'old':
+            return render_template('save_credentials.html',
+                                   info="You selected settings for default fans in combination with no sensor fan. Please select default for the sensor fan.")
+        set_gpio_config(fans_gpio, red_gpio, blue_gpio, farred_gpio, sensor_fans_gpio)
+
         # configure cron
-        os.system('(crontab -u pi -l 2>/home/pi/logcron.txt; echo \'@reboot cd /home/pi/astrogeeks-actuator-control && ./controld \'; ) |  sort - | uniq - | crontab -u pi -')
+        os.system('(crontab -u sidney -l 2>/home/pi/logcron.txt; echo \'@reboot cd /home/pi/astrogeeks-actuator-control && ./controld \'; ) |  sort - | uniq - | crontab -u sidney -')
         cron_time(fans_time_on, fans_time_off, "Fan", "1")
+        if sensor_fans_gpio != 'old':
+            cron_time(sensor_fans_time_on, sensor_fans_time_off, "Sensor_Fan", "1")
         cron_time(red_time_on, red_time_off, "Led.Red", int_red)
         cron_time(blue_time_on, blue_time_off, "Led.Blue", int_blue)
         cron_time(farred_time_on, farred_time_off, "Led.FarRed", int_farred)
 
         os.system('timedatectl set-timezone ' + location )
+
 
     # Call set_ap_client_mode() in a thread otherwise the reboot will prevent
     # the response from getting to the browser
@@ -188,7 +200,7 @@ def create_kit_config_with_lcd(api_url, ws_url, auth_serial, auth_token, i2c_add
 
     os.system('mv kit_config.json.tmp /home/pi/astroplant-kit/astroplant_kit/kit_config.json')
     os.system('(crontab -l 2>/home/pi/log_pigpiod.txt; echo \'@reboot sudo pigpiod\'; ) |  sort - | uniq - | crontab -')
-    os.system('(crontab -u pi -l 2>/home/pi/logcron.txt; echo \'@reboot sleep 30; cd /home/pi/astroplant-kit/astroplant_kit && python3 core.py >> /home/pi/core.log \'; ) |  sort - | uniq - | crontab -u pi - -')
+    os.system('(crontab -u sidney -l 2>/home/pi/logcron.txt; echo \'@reboot sleep 30; cd /home/pi/astroplant-kit/astroplant_kit && python3 core.py >> /home/pi/core.log \'; ) |  sort - | uniq - | crontab -u sidney - -')
 
 def create_kit_config(api_url, ws_url, auth_serial, auth_token):
     kit_conf_file = open('kit_config.json.tmp', 'w')
@@ -216,25 +228,28 @@ def create_kit_config(api_url, ws_url, auth_serial, auth_token):
 
     os.system('mv kit_config.json.tmp /home/pi/astroplant-kit/astroplant_kit/kit_config.json')
     os.system('(crontab -l 2>/home/pi/log_pigpiod.txt; echo \'@reboot sudo pigpiod\'; ) |  sort - | uniq - | crontab -')
-    os.system('(crontab -u pi -l 2>/home/pi/logcron.txt; echo \'@reboot sleep 30; cd /home/pi/astroplant-kit/astroplant_kit && python3 core.py >> /home/pi/core.log \'; ) |  sort - | uniq - | crontab -u pi - -')
+    os.system('(crontab -u sidney -l 2>/home/pi/logcron.txt; echo \'@reboot sleep 30; cd /home/pi/astroplant-kit/astroplant_kit && python3 core.py >> /home/pi/core.log \'; ) |  sort - | uniq - | crontab -u sidney - -')
 
-def if_schedule_empty(fans_gpio,fans_time_on,fans_time_off,red_gpio,red_time_off,red_time_on,blue_gpio,
-                             blue_time_off,blue_time_on,farred_gpio,farred_time_off,farred_time_on,int_blue, int_red,
+def if_schedule_empty(fans_gpio,fans_time_on,fans_time_off,sensor_fans_gpio,sensor_fans_time_on,sensor_fans_time_off,
+                      red_gpio,red_time_off,red_time_on,blue_gpio,blue_time_off,blue_time_on,farred_gpio,farred_time_off,
+                      farred_time_on,int_blue, int_red,
                              int_farred):
     if fans_gpio and fans_time_on and fans_time_off and red_gpio and red_time_off and red_time_on and blue_gpio and \
-            blue_time_off and blue_time_on and farred_gpio and farred_time_off and farred_time_on and int_blue and int_red and int_farred:
+            blue_time_off and blue_time_on and farred_gpio and farred_time_off and farred_time_on and int_blue and int_red \
+            and int_farred and sensor_fans_gpio and sensor_fans_time_on and sensor_fans_time_off:
         return False
     else:
         return True
 
-def set_gpio_config(fans_gpio, red_gpio, blue_gpio, farred_gpio):
+def set_gpio_config(fans_gpio, red_gpio, blue_gpio, farred_gpio, sensor_fans_gpio):
     config = open('config.json.tmp', 'w')
 
-    if fans_gpio == 'old':
+    if fans_gpio == 'old' and sensor_fans_gpio == 'old':
         base_str = '    { "className": "Fan", "name": "Fan", "pin": 20 },\n' \
                    '    { "className": "Fan", "name": "Fan", "pin": 21 }\n'
     else:
-        base_str = '     { "className": "Fan", "name": "Fan", "pin": '+fans_gpio+' }\n'
+        base_str = '     { "className": "Fan", "name": "Fan", "pin": '+fans_gpio+' },\n' \
+                   '     { "className": "Fan", "name": "Sensor_Fan", "pin": ' + sensor_fans_gpio + ' }\n'
     config.write('{\n')
     config.write(' "actuators": [\n')
     config.write('     { "className": "Led", "name": "Led.Blue", "pin": '+blue_gpio+' },\n')
@@ -281,21 +296,21 @@ def cron_time(on ,off, name, parameter):
         cmd_off = None
 
     if cmd_off is not None:
-        os.system('(crontab -u pi -l 2>/home/pi/logschedule.txt; echo \'* '+ cmd_on + ' * * * '
+        os.system('(crontab -u sidney -l 2>/home/sidney/logschedule.txt; echo \'* '+ cmd_on + ' * * * '
                   'cd /home/pi/astrogeeks-actuator-control && ./control "'+name+'" '+parameter+' \'; ) '
-                  '|  sort - | uniq - | crontab -u pi - ')
-        if name != "Fan":
-            os.system('(crontab -u pi -l 2>/home/pi/logschedule.txt; echo \'* '+ cmd_off + ' * * * '
+                  '|  sort - | uniq - | crontab -u sidney - ')
+        if name != "Fan" and name != "Sensor_Fan":
+            os.system('(crontab -u sidney -l 2>/home/sidney/logschedule.txt; echo \'* '+ cmd_off + ' * * * '
                       'cd /home/pi/astrogeeks-actuator-control && ./control "'+name+'" 0.0 \'; ) '
-                      '|  sort - | uniq - | crontab -u pi - ')
+                      '|  sort - | uniq - | crontab -u sidney - ')
         else:
-            os.system('(crontab -u pi -l 2>/home/pi/logschedule.txt; echo \'* '+ cmd_off + ' * * * '
+            os.system('(crontab -u sidney -l 2>/home/sidney/logschedule.txt; echo \'* '+ cmd_off + ' * * * '
                       'cd /home/pi/astrogeeks-actuator-control && ./control "'+name+'" 0 \'; ) '
-                      '|  sort - | uniq - | crontab -u pi - ')
+                      '|  sort - | uniq - | crontab -u sidney - ')
     else:
-        os.system('(crontab -u pi -l 2>/home/pi/logschedule.txt; echo \'* '+ cmd_on + ' * * * '
+        os.system('(crontab -u sidney -l 2>/home/sidney/logschedule.txt; echo \'* '+ cmd_on + ' * * * '
                   'cd /home/pi/astrogeeks-actuator-control && ./control "'+name+'" '+parameter+' \'; ) '
-                  '|  sort - | uniq - | crontab -u pi - ')
+                  '|  sort - | uniq - | crontab -u sidney - ')
     
 def set_ap_client_mode():
     os.system('rm -f /etc/raspiwifi/host_mode')
