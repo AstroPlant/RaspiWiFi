@@ -3,9 +3,7 @@ RaspiWiFi
 Forked from jasbur/RaspiWifi for setting up Wifi, AstroPlant credentials. To be used for a dedicated AstroPlant image.
 
 NOTES:
-    - This is a modified RaspiWifi version for pilot users of AstroPlant. At this point the implementation is not generic for actuator control.
-      Future developments will be focused on cloud support for actuator control for arbitrary GPIO pins. Hence this fork is only of temporary nature.
-    - If you wish to use the standard RaspiWifi only for internet configurations, please use the master branch.
+This is a modified RaspiWifi version for pilot users of AstroPlant. At this point the implementation is not generic for actuator control.Future developments will be focused on cloud support for actuator control for arbitrary GPIO pins. Hence this fork is only of temporary nature. If you wish to use the standard RaspiWifi only for internet configurations, please use the master branch.
 
 
 DEPENDENCIES:
@@ -91,7 +89,7 @@ USAGE:
 device.
 
 == Navigate to [10.0.0.1], [raspiwifisetup.com], or
-[astroplantwifisetup.com] using any web browser on the device you
+[astroplantsetup.com] using any web browser on the device you
 connected with. (don't forget to manually start with [https://] when using SSL mode)
 
 == Select the WiFi connection you'd like your Raspberry Pi to connect to from
