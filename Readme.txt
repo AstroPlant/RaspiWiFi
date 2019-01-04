@@ -1,31 +1,35 @@
 RaspiWiFi
 
-Forked from jasbur/RaspiWifi for setting up Wifi, AstroPlant credentials. To be used later for a dedicated AstroPlant image.
+Forked from jasbur/RaspiWifi for setting up Wifi, AstroPlant credentials. To be used for a dedicated AstroPlant image.
 
-RaspiWiFi is a program to headlessly configure a Raspberry Pi's WiFi
-connection using using any other WiFi-enabled device (much like the way
-a Chromecast or similar device can be configured). Enterprise connections are at the moment unsupported.
+NOTES:
+    - This is a modified RaspiWifi version for pilot users of AstroPlant. At this point the implementation is not generic for actuator control.
+      Future developments will be focused on cloud support for actuator control for arbitrary GPIO pins. Hence this fork is only of temporary nature.
+    - If you wish to use the standard RaspiWifi only for internet configurations, please use the master branch.
 
-It can also be used as a method to connect wirelessly point-to-point with your
-Pi when a network is not available or you do not want to connect to one. Just
-leave it in Configuration Mode, connect to the "RaspiWiFi[xxxx] Setup" access
-point. The Pi will be addressable at 10.0.0.1 or raspiwifisetup.com using all the normal methods you
-might use while connected through a network.
-
-RaspiWiFi has been
-tested with the Raspberry Pi B+, Raspberry Pi 3, and Raspberry Pi Zero W.
 
 DEPENDENCIES:
-	- AstroPlant astroplant-kit, astroplant-api-python-client, 
-	  astroplant-peripheral-device-library need to be installed. 
-	- Current configuration expects astroplant-kit under /home/pi/.
+	- AstroPlant astroplant-kit, astroplant-api-python-client,
+	  astroplant-peripheral-device-library need to be installed.
+	- Optionally astrogeeks-actuator-control for actuator control
+	- Current configuration expects all astroplant libraries under /home/pi/.
 	- A push button connected to GPIO7 (example:http://razzpisampler.oreilly.com/ch07.html).
 	- A push button connected to GPIO6
 	- pigpio library (sudo apt-get install pigpio python-pigpio python3-pigpio)
 	- cryptography packages (sudo apt-get install build-essential libssl-dev libffi-dev python3-dev)
 	- pyopenssl (pip3 install pyopenssl)
 
- SCRIPT-BASED INSTALLATION INSTRUCTIONS:
+RaspiWifi can also be used as a method to connect wirelessly point-to-point with your
+Pi when a network is not available or you do not want to connect to one. Just
+leave it in Configuration Mode, connect to the "RaspiWiFi[xxxx] Setup" access
+point. The Pi will be addressable at 10.0.0.1 or astroplantsetup.com using all the normal methods you
+might use while connected through a network.
+
+RaspiWiFi has been
+tested with the Raspberry Pi B+, Raspberry Pi 3, and Raspberry Pi Zero W.
+
+
+SCRIPT-BASED INSTALLATION INSTRUCTIONS:
 
 == Navigate to the directory where you downloaded or cloned RaspiWiFi
 
@@ -36,7 +40,7 @@ sudo python3 initial_setup.py
 == This script will install all necessary prerequisites and copy all necessary
 config and library files, then reboot. When it finishes booting it should
 present itself in "Configuration Mode" as a WiFi access point with the
-name "RaspiWiFi[xxxx] Setup".
+name "AstroPlant[xxxx] Setup".
 
 == The original RaspiWiFi directory that you ran the Initial Setup is no longer
 needed after installation and can be safely deleted. All necessary files are
@@ -87,8 +91,7 @@ USAGE:
 device.
 
 == Navigate to [10.0.0.1], [raspiwifisetup.com], or
-[idliketoconfigurethewifionthisdevicenowplease.com] (I was debating whether this
-was funny or not and, yes, it was) using any web browser on the device you
+[astroplantwifisetup.com] using any web browser on the device you
 connected with. (don't forget to manually start with [https://] when using SSL mode)
 
 == Select the WiFi connection you'd like your Raspberry Pi to connect to from
@@ -103,7 +106,7 @@ specified.
 
 == You can also use the Pi in a point-to-point connection mode by leaving it in
 Configuration Mode. All services will be addresible in their normal way at
-10.0.0.1 while connected to the "RaspiWiFi[xxxx] Setup" AP.
+10.0.0.1 while connected to the "AstroPlant[xxxx] Setup" AP.
 
 
 

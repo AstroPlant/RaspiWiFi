@@ -60,18 +60,23 @@ def actuator_control():
         fans_gpio = request.form.get('fans_gpio', None)
         fans_time_on = request.form.get('fans_time_on', None)
         fans_time_off = request.form.get('fans_time_off', None)
+        option_fans =  request.form.get('option_fans', None)
         sensor_fans_gpio = request.form.get('sensor_fans_gpio', None)
         sensor_fans_time_on = request.form.get('sensor_fans_time_on', None)
         sensor_fans_time_off = request.form.get('sensor_fans_time_off', None)
+        sensor_option_fans = request.form.get('sensor_option_fans', None)
         red_gpio = request.form.get('red_gpio', None)
         red_time_on = request.form.get('red_time_on', None)
         red_time_off = request.form.get('red_time_off', None)
+        option_red = request.form.get('option_red', None)
         blue_gpio = request.form.get('blue_gpio', None)
         blue_time_on = request.form.get('blue_time_on', None)
         blue_time_off = request.form.get('blue_time_off', None)
+        option_blue = request.form.get('option_blue', None)
         farred_gpio = request.form.get('farred_gpio', None)
         farred_time_on = request.form.get('farred_time_on', None)
         farred_time_off= request.form.get('farred_time_off', None)
+        option_farred = request.form.get('option_farred', None)
         int_farred = request.form.get('int_farred', None)
         int_blue = request.form.get('int_blue', None)
         int_red = request.form.get('int_red', None)
@@ -93,12 +98,27 @@ def actuator_control():
 
         # configure cron
         os.system('(crontab -u pi -l 2>/home/pi/logcron.txt; echo \'@reboot cd /home/pi/astrogeeks-actuator-control && ./controld \'; ) |  sort - | uniq - | crontab -u pi -')
-        cron_time(fans_time_on, fans_time_off, "Fan", "1")
-        if sensor_fans_gpio != 'old':
+
+        if option_fans == 'time':
+            cron_time(fans_time_on, fans_time_off, "Fan", "1")
+        elif option_fans == 'on':
+            cron_time('12:00', '12:00', "Fan", "1")
+        if sensor_fans_gpio != 'old' and sensor_option_fans== 'time':
             cron_time(sensor_fans_time_on, sensor_fans_time_off, "Sensor_Fan", "1")
-        cron_time(red_time_on, red_time_off, "Led.Red", int_red)
-        cron_time(blue_time_on, blue_time_off, "Led.Blue", int_blue)
-        cron_time(farred_time_on, farred_time_off, "Led.FarRed", int_farred)
+        elif sensor_option_fans == 'on':
+            cron_time('12:00', '12:00', "Sensor_Fan", "1")
+        if option_red == 'time':
+            cron_time(red_time_on, red_time_off, "Led.Red", int_red)
+        elif option_red == 'on':
+            cron_time('12:00', '12:00', "Led.Red", int_red)
+        if option_blue == 'time':
+            cron_time(blue_time_on, blue_time_off, "Led.Blue", int_blue)
+        elif option_blue == 'on':
+            cron_time('12:00', '12:00', "Led.Blue", int_blue)
+        if option_farred == 'time':
+            cron_time(farred_time_on, farred_time_off, "Led.FarRed", int_farred)
+        elif option_farred == 'on':
+            cron_time('12:00', '12:00', "Led.FarRed", int_farred)
 
         os.system('timedatectl set-timezone ' + location )
 
@@ -288,11 +308,14 @@ def cron_time(on ,off, name, parameter):
             cmd_on = str(on)
         else:
             cmd_on = str(on) + "-" + "23" + ",0" + "-" + str(off -1)
-
-        cmd_off = str(off) + "-" + str(on-1)
+        # if the start time and end time result in the same number only use end time for cmd_off
+        if str(off) == str(on-1):
+            cmd_off = str(off)
+        else:
+            cmd_off = str(off) + "-" + str(on-1)
     else:
         # the start time is the same as stop time, the assumption is that it should run continuously
-        cmd_on = str(on)
+        cmd_on = '*'
         cmd_off = None
 
     if cmd_off is not None:
