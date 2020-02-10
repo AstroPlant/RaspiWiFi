@@ -2,10 +2,23 @@
 
 {% block body %}
   <div id="mainContent">
-    <h1>AP WiFi Setup</h1>
+    <div id="wpaStatus">
+      <ul>
+        {% if config_hash['wpa_enabled'] == '1': %}
+          <li><a href="{{ url_for('wpa_settings') }}">Config. Mode WPA: ENABLED</a></li>
+          <li><a href="{{ url_for('wpa_settings') }}">Key: {{ config_hash['wpa_key'] }}</a></li>
+        {% endif %}
 
+        {% if config_hash['wpa_enabled'] == '0': %}
+          <li><a href="{{ url_for('wpa_settings') }}">Config. Mode WPA: DISABLED</a></li>
+      {% endif %}
+      </ul>
+    </div>
+
+    <h1>AP WiFi Setup</h1>
     <div class="wifiIcon"></div>
     <div><label for="info">{{ info }}</label></div>
+
     <form action="{{ url_for('save_credentials') }}" method=post>
       <ul>
         <li><label for="ssid">Select your WiFi network</label></li>

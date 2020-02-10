@@ -3,6 +3,7 @@ import subprocess
 import os
 import time
 from threading import Thread
+import fileinput
 
 app = Flask(__name__)
 app.debug = True
@@ -12,15 +13,26 @@ app.debug = True
 def index():
     wifi_ap_array = scan_wifi_networks()
     info = ""
-    return render_template('app.html', wifi_ap_array = wifi_ap_array, info=info)
+    config_hash = config_file_hash()
+
+    return render_template('app.html', wifi_ap_array = wifi_ap_array, config_hash = config_hash, info = info)
+
 
 @app.route('/manual_ssid_entry')
 def manual_ssid_entry():
     return render_template('manual_ssid_entry.html')
 
+
 @app.route('/enterprise_entry')
 def enterprise_entry():
     return render_template('enterprise_entry.html')
+
+
+@app.route('/wpa_settings')
+def wpa_settings():
+    config_hash = config_file_hash()
+    return render_template('wpa_settings.html', wpa_enabled = config_hash['wpa_enabled'], wpa_key = config_hash['wpa_key'])
+
 
 @app.route('/save_credentials', methods = ['GET', 'POST'])
 def save_credentials():
@@ -130,7 +142,33 @@ def actuator_control():
         set_ap_client_mode()
     t = Thread(target=sleep_and_start_ap)
     t.start()
+
     return render_template('completed.html')
+
+
+@app.route('/save_wpa_credentials', methods = ['GET', 'POST'])
+def save_wpa_credentials():
+    config_hash = config_file_hash()
+    wpa_enabled = request.form.get('wpa_enabled')
+    wpa_key = request.form['wpa_key']
+
+    if str(wpa_enabled) == '1':
+        update_wpa(1, wpa_key)
+    else:
+        update_wpa(0, wpa_key)
+
+    def sleep_and_reboot_for_wpa():
+        time.sleep(2)
+        os.system('reboot')
+
+    t = Thread(target=sleep_and_reboot_for_wpa)
+    t.start()
+
+    config_hash = config_file_hash()
+    return render_template('save_wpa_credentials.html', wpa_enabled = config_hash['wpa_enabled'], wpa_key = config_hash['wpa_key'])
+
+
+
 
 ######## FUNCTIONS ##########
 
@@ -342,8 +380,24 @@ def set_ap_client_mode():
     os.system('chmod +x /etc/cron.raspiwifi/apclient_bootstrapper')
     os.system('mv /etc/dnsmasq.conf.original /etc/dnsmasq.conf')
     os.system('mv /etc/dhcpcd.conf.original /etc/dhcpcd.conf')
-    os.system('cp /usr/lib/raspiwifi/reset_device/static_files/isc-dhcp-server.apclient /etc/default/isc-dhcp-server')
     os.system('reboot')
+
+def update_wpa(wpa_enabled, wpa_key):
+    with fileinput.FileInput('/etc/raspiwifi/raspiwifi.conf', inplace=True) as raspiwifi_conf:
+        for line in raspiwifi_conf:
+            if 'wpa_enabled=' in line:
+                line_array = line.split('=')
+                line_array[1] = wpa_enabled
+                print(line_array[0] + '=' + str(line_array[1]))
+
+            if 'wpa_key=' in line:
+                line_array = line.split('=')
+                line_array[1] = wpa_key
+                print(line_array[0] + '=' + line_array[1])
+
+            if 'wpa_enabled=' not in line and 'wpa_key=' not in line:
+                print(line, end='')
+
 
 def config_file_hash():
     config_file = open('/etc/raspiwifi/raspiwifi.conf')

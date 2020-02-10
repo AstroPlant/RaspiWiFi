@@ -13,23 +13,59 @@ def config_file_hash():
 
 	return config_hash
 
-def hostapd_reset_check(ssid_prefix):
-	hostapd_conf = open('/etc/hostapd/hostapd.conf', 'r')
-	reset_required = True
+def wpa_check_activate(wpa_enabled, wpa_key):
+	wpa_active = False
+	reboot_required = False
 
-	for line in hostapd_conf:
-	    if ssid_prefix in line:
-	        reset_required = False
+	with open('/etc/hostapd/hostapd.conf') as hostapd_conf:
+		for line in hostapd_conf:
+			if 'wpa_passphrase' in line:
+				wpa_active = True
 
-	return reset_required
+	if wpa_enabled == '1' and wpa_active == False:
+		reboot_required = True
+		os.system('cp /usr/lib/raspiwifi/reset_device/static_files/hostapd.conf.wpa /etc/hostapd/hostapd.conf')
 
-def update_hostapd(ssid_prefix, serial_last_four):
-	os.system('cp -a /usr/lib/raspiwifi/reset_device/static_files/hostapd.conf /etc/hostapd/')
+	if wpa_enabled == '1':
+		with fileinput.FileInput('/etc/hostapd/hostapd.conf', inplace=True) as hostapd_conf:
+			for line in hostapd_conf:
+				if 'wpa_passphrase' in line:
+					if 'wpa_passphrase=' + wpa_key not in line:
+						print('wpa_passphrase=' + wpa_key)
+						os.system('reboot')
+					else:
+						print(line, end = '')
+				else:
+					print(line, end = '')
 
-	with fileinput.FileInput("/etc/hostapd/hostapd.conf", inplace=True) as file:
-		for line in file:
-			print(line.replace("temp-ssid", ssid_prefix + serial_last_four), end='')
-			file.close
+	if wpa_enabled == '0' and wpa_active == True:
+		reboot_required = True
+		os.system('cp /usr/lib/raspiwifi/reset_device/static_files/hostapd.conf.nowpa /etc/hostapd/hostapd.conf')
+
+	return reboot_required
+
+def update_ssid(ssid_prefix, serial_last_four):
+	reboot_required = False
+	ssid_correct = False
+
+	with open('/etc/hostapd/hostapd.conf') as hostapd_conf:
+		for line in hostapd_conf:
+			if ssid_prefix in line:
+				ssid_correct = True
+
+	if ssid_correct == False:
+		with fileinput.FileInput("/etc/hostapd/hostapd.conf", inplace=True) as file:
+			for line in file:
+				if 'ssid=' in line:
+					line_array = line.split('=')
+					line_array[1] = ssid_prefix + ' ' + serial_last_four
+					print(line_array[0] + '=' + line_array[1])
+				else:
+					print(line, end = '')
+
+		reboot_required = True
+			
+	return reboot_required
 
 def is_wifi_active():
 	iwconfig_out = subprocess.check_output(['iwconfig']).decode('utf-8')

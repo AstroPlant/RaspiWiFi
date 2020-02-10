@@ -47,12 +47,17 @@ copied to /usr/lib/raspiwifi/ on setup.
 
 CONFIGURATION:
 
-== You will be prompted to set 3 variables during the Initial Setup Script:
+== You will be prompted to set a few variables during the Initial Setup script:
 
 ==== "SSID Prefix" [default: "RaspiWiFi Setup"]: This is the prefix of the SSID
       that your Pi will broadcast for you to connect to during
       Configuration Mode (Host Mode). The last four of you Pi's serial number
       will be appended to whatever you enter here.
+
+==== "WPA Encryption" [default: No]: If oyu enable this setting the Access Point 
+      created during Configuration Mode will be encrypted using WPA2 encryption. 
+      The prompt following this one will let you specify the Wireless Key to be 
+      used. You can leave the password blank if you chose 'N' to this option. 
 
 ==== "Auto-Config mode" [default: n]: If you choose to enable this mode your Pi
       will check for an active connection while in normal operation mode (Client Mode).
@@ -102,6 +107,12 @@ specify your network information by clicking on the "manual SSID entry ->" link.
 == At this point your Raspberry Pi will reboot and connect to the access point
 specified.
 
+== You can view the current WPA encryption settings and change them from the main Web 
+Configuration interface. The current settings are visible in a panel in the upper 
+left corner of the screen. If you click the values in this display you will be taken 
+to a page where you can change them. If you change them your device will reboot to 
+enable the new configuration. 
+
 == You can also use the Pi in a point-to-point connection mode by leaving it in
 Configuration Mode. All services will be addresible in their normal way at
 10.0.0.1 while connected to the "AstroPlant[xxxx] Setup" AP.
@@ -120,3 +131,13 @@ connected on GPIO7.
 == You can also reset the device by running the manual_reset.py in the "Reset Device" directory
 /usr/lib/raspiwifi/reset_device directory as root or with sudo.
 
+
+UNINSTALLATION:
+
+== You can uninstall RaspiWiFi at any time by running:
+   
+   sudo python3 /usr/lib/raspiwifi/uninstall.python3
+
+   You can also run it from the "libs/" directory from a fresh clone if you've 
+   installed from a previous version and don't have /usr/lib/raspiwifi/uninstall.py 
+   available.
