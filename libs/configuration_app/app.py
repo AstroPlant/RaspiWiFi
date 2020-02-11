@@ -34,106 +34,41 @@ def wpa_settings():
     return render_template('wpa_settings.html', wpa_enabled = config_hash['wpa_enabled'], wpa_key = config_hash['wpa_key'])
 
 
+@app.route('/astroplant')
+def astroplant():
+    return render_template('astroplant.html')
+
+
 @app.route('/save_credentials', methods = ['GET', 'POST'])
 def save_credentials():
     ssid = request.form.get('ssid', None)
     wifi_key = request.form.get('wifi_key', None)
-    api_url = request.form.get('api_url', None)
-    ws_url = request.form.get('ws_url', None)
-    auth_serial = request.form.get('auth_serial', None)
-    auth_token = request.form.get('auth_secret', None)
     enterprise_id = request.form.get('identity', None)
     enterprise_pwd = request.form.get('password', None)
     enterprise_check = request.form.get('checker', None)
+
     if enterprise_check == "1":
-            create_enterprise_wpa_supplicant(ssid, enterprise_id, enterprise_pwd)
+        create_enterprise_wpa_supplicant(ssid, enterprise_id, enterprise_pwd)
     else:
-            create_wpa_supplicant(ssid, wifi_key)
-    checked = request.form.get('i2c_check', None)
-    if checked:
-        i2c_address = request.form.get('lcd_address', None)
-        if i2c_address:
-            create_kit_config_with_lcd(api_url, ws_url, auth_serial, auth_token, i2c_address)
-        else:
-            wifi_ap_array = scan_wifi_networks()
-            info = "If you checked the LCD screen, fill in the i2c address"
-            return render_template('app.html', wifi_ap_array=wifi_ap_array, info=info)
-    else:
-        create_kit_config(api_url, ws_url, auth_serial, auth_token)
+        create_wpa_supplicant(ssid, wifi_key)
 
     return render_template('save_credentials.html', ssid = ssid)
 
-@app.route('/actuator_control', methods = ['GET', 'POST'])
-def actuator_control():
-    act_chck = request.form.get('chkControl', None)
-    if act_chck is not None:
-        area = request.form.get('area', None)
-        location = request.form.get('location', None)
-        fans_gpio = request.form.get('fans_gpio', None)
-        fans_time_on = request.form.get('fans_time_on', None)
-        fans_time_off = request.form.get('fans_time_off', None)
-        option_fans =  request.form.get('option_fans', None)
-        sensor_fans_gpio = request.form.get('sensor_fans_gpio', None)
-        sensor_fans_time_on = request.form.get('sensor_fans_time_on', None)
-        sensor_fans_time_off = request.form.get('sensor_fans_time_off', None)
-        sensor_option_fans = request.form.get('sensor_option_fans', None)
-        red_gpio = request.form.get('red_gpio', None)
-        red_time_on = request.form.get('red_time_on', None)
-        red_time_off = request.form.get('red_time_off', None)
-        option_red = request.form.get('option_red', None)
-        blue_gpio = request.form.get('blue_gpio', None)
-        blue_time_on = request.form.get('blue_time_on', None)
-        blue_time_off = request.form.get('blue_time_off', None)
-        option_blue = request.form.get('option_blue', None)
-        farred_gpio = request.form.get('farred_gpio', None)
-        farred_time_on = request.form.get('farred_time_on', None)
-        farred_time_off= request.form.get('farred_time_off', None)
-        option_farred = request.form.get('option_farred', None)
-        int_farred = request.form.get('int_farred', None)
-        int_blue = request.form.get('int_blue', None)
-        int_red = request.form.get('int_red', None)
-        # quick (dirty) fix for the following
-        if area == 'base' or location == 'Please choose from above' or area == '' or location == '':
-            info = "You have to select the area and location."
-            return render_template('save_credentials.html', info=info)
-        if if_schedule_empty(fans_gpio,fans_time_on,fans_time_off,sensor_fans_gpio,sensor_fans_time_on,sensor_fans_time_off,red_gpio,red_time_off,red_time_on,blue_gpio,
-                             blue_time_off,blue_time_on,farred_gpio,farred_time_off,farred_time_on, int_blue, int_red,
-                             int_farred):
-            info = "You have to fill in all schedule details."
-            return render_template('save_credentials.html', info=info)
-        if fans_gpio == 'old' and sensor_fans_gpio != 'old':
-            return render_template('save_credentials.html', info="You selected settings for an old development fan in combination with a new default sensor fan. Please make sure to have either dev or default settings consistently")
-        if fans_gpio != 'old' and sensor_fans_gpio == 'old':
-            return render_template('save_credentials.html',
-                                   info="You selected settings for default fans in combination with no sensor fan. Please select default for the sensor fan.")
-        set_gpio_config(fans_gpio, red_gpio, blue_gpio, farred_gpio, sensor_fans_gpio)
 
-        # configure cron
-        os.system('(crontab -u pi -l 2>/home/pi/logcron.txt; echo \'@reboot cd /home/pi/astrogeeks-actuator-control && ./controld \'; ) |  sort - | uniq - | crontab -u pi -')
-
-        if option_fans == 'time':
-            cron_time(fans_time_on, fans_time_off, "Fan", "1")
-        elif option_fans == 'on':
-            cron_time('12:00', '12:00', "Fan", "1")
-        if sensor_fans_gpio != 'old' and sensor_option_fans== 'time':
-            cron_time(sensor_fans_time_on, sensor_fans_time_off, "Sensor_Fan", "1")
-        elif sensor_option_fans == 'on':
-            cron_time('12:00', '12:00', "Sensor_Fan", "1")
-        if option_red == 'time':
-            cron_time(red_time_on, red_time_off, "Led.Red", int_red)
-        elif option_red == 'on':
-            cron_time('12:00', '12:00', "Led.Red", int_red)
-        if option_blue == 'time':
-            cron_time(blue_time_on, blue_time_off, "Led.Blue", int_blue)
-        elif option_blue == 'on':
-            cron_time('12:00', '12:00', "Led.Blue", int_blue)
-        if option_farred == 'time':
-            cron_time(farred_time_on, farred_time_off, "Led.FarRed", int_farred)
-        elif option_farred == 'on':
-            cron_time('12:00', '12:00', "Led.FarRed", int_farred)
-
-        os.system('timedatectl set-timezone ' + location )
-
+@app.route('/save_astroplant', methods = ['GET', 'POST'])
+def save_astroplant():
+    mqtt_host = request.form.get('mqtt_host', None)
+    mqtt_port = request.form.get('mqtt_port', None)
+    auth_serial = request.form.get('auth_serial', None)
+    auth_secret = request.form.get('auth_secret', None)
+    i2c_address = None
+    checked = request.form.get('i2c_check', None)
+    if checked:
+        i2c_address = request.form.get('lcd_address', None)
+        if not i2c_address:
+            info = "Please enter the I2C address of the LCD screen"
+            return render_template('astroplant.html', info=info)
+    create_kit_config(mqtt_host, mqtt_port, auth_serial, auth_secret, i2c_address=i2c_address)
 
     # Call set_ap_client_mode() in a thread otherwise the reboot will prevent
     # the response from getting to the browser
@@ -229,150 +164,35 @@ def create_enterprise_wpa_supplicant(ssid, identity, password):
     os.system('mv wpa_supplicant.conf.tmp /etc/wpa_supplicant/wpa_supplicant.conf')
 
 
-def create_kit_config_with_lcd(api_url, ws_url, auth_serial, auth_token, i2c_address):
-    kit_conf_file = open('kit_config.json.tmp', 'w')
+def create_kit_config(mqtt_host, mqtt_port, auth_serial, auth_secret, i2c_address = None):
+    config = (
+        f"[message_broker]\n"
+        f"host = \"{mqtt_host}\"\n"
+        f"port = {mqtt_port}\n"
+        f"\n"
+        f"[message_broker.auth]\n"
+        f"serial = \"{auth_serial}\"\n"
+        f"secret = \"{auth_secret}\"\n"
+        f"\n"
+        f"[debug]\n"
+        f"level = \"INFO\"\n"
+    )
+    if i2c_address is not None:
+        config += (
+            f"\n"
+            f"[debug.peripheral_display]\n"
+            f"module_name = \"astroplant_peripheral_device_library.lcd\"\n"
+            f"class_name = \"LCD\"\n"
+            f"\n"
+            f"[debug.peripheral_display.configuration]\n"
+            f"i2cAddress = \"{i2c_address}\"\n"
+        )
+    with open('kit_config.toml.tmp', 'w') as kit_conf_file:
+        kit_conf_file.write(config)
 
-    kit_conf_file.write('{\n')
-    kit_conf_file.write('    "api": {\n')
-    kit_conf_file.write('        "root": "' + api_url + '"\n')
-    kit_conf_file.write('    },\n')
-    kit_conf_file.write('    "websockets": {\n')
-    kit_conf_file.write('        "url": "' + ws_url + '"\n')
-    kit_conf_file.write('    },\n')
-    kit_conf_file.write('    "auth": {\n')
-    kit_conf_file.write('        "serial": "' + auth_serial + '",\n')
-    kit_conf_file.write('        "secret": "' + auth_token + '"\n')
-    kit_conf_file.write('    },\n')
-    kit_conf_file.write('    "debug": {\n')
-    kit_conf_file.write('        "level": "INFO",\n')
-    kit_conf_file.write('        "peripheral_display": {\n')
-    kit_conf_file.write('            "module_name": "astroplant_peripheral_device_library.lcd",\n')
-    kit_conf_file.write('            "class_name": "LCD",\n')
-    kit_conf_file.write('            "parameters": {\n')
-    kit_conf_file.write('                "i2c_address": "'+i2c_address+'"\n')
-    kit_conf_file.write('            }\n')
-    kit_conf_file.write('        }\n')
-    kit_conf_file.write('    }\n')
-    kit_conf_file.write('}\n')
-    kit_conf_file.close
+    os.system('chown pi:pi kit_config.toml.tmp')
+    os.system('mv kit_config.toml.tmp /home/pi/kit_config.toml')
 
-    os.system('mv kit_config.json.tmp /home/pi/astroplant-kit/astroplant_kit/kit_config.json')
-    os.system('(crontab -l 2>/home/pi/log_pigpiod.txt; echo \'@reboot sudo pigpiod\'; ) |  sort - | uniq - | crontab -')
-    os.system('(crontab -u pi -l 2>/home/pi/logcron.txt; echo \'@reboot sleep 30; cd /home/pi/astroplant-kit/astroplant_kit && python3 core.py >> /home/pi/core.log \'; ) |  sort - | uniq - | crontab -u pi - -')
-
-def create_kit_config(api_url, ws_url, auth_serial, auth_token):
-    kit_conf_file = open('kit_config.json.tmp', 'w')
-
-    kit_conf_file.write('{\n')
-    kit_conf_file.write('    "api": {\n')
-    kit_conf_file.write('        "root": "' + api_url + '"\n')
-    kit_conf_file.write('    },\n')
-    kit_conf_file.write('    "websockets": {\n')
-    kit_conf_file.write('        "url": "' + ws_url + '"\n')
-    kit_conf_file.write('    },\n')
-    kit_conf_file.write('    "auth": {\n')
-    kit_conf_file.write('        "serial": "' + auth_serial + '",\n')
-    kit_conf_file.write('        "secret": "' + auth_token + '"\n')
-    kit_conf_file.write('    },\n')
-    kit_conf_file.write('    "debug": {\n')
-    kit_conf_file.write('        "level": "INFO",\n')
-    kit_conf_file.write('        "peripheral_display": {\n')
-    kit_conf_file.write('            "module_name": "peripheral",\n')
-    kit_conf_file.write('            "class_name": "BlackHoleDisplay"\n')
-    kit_conf_file.write('        }\n')
-    kit_conf_file.write('    }\n')
-    kit_conf_file.write('}\n')
-    kit_conf_file.close
-
-    os.system('mv kit_config.json.tmp /home/pi/astroplant-kit/astroplant_kit/kit_config.json')
-    os.system('(crontab -l 2>/home/pi/log_pigpiod.txt; echo \'@reboot sudo pigpiod\'; ) |  sort - | uniq - | crontab -')
-    os.system('(crontab -u pi -l 2>/home/pi/logcron.txt; echo \'@reboot sleep 30; cd /home/pi/astroplant-kit/astroplant_kit && python3 core.py >> /home/pi/core.log \'; ) |  sort - | uniq - | crontab -u pi - -')
-
-def if_schedule_empty(fans_gpio,fans_time_on,fans_time_off,sensor_fans_gpio,sensor_fans_time_on,sensor_fans_time_off,
-                      red_gpio,red_time_off,red_time_on,blue_gpio,blue_time_off,blue_time_on,farred_gpio,farred_time_off,
-                      farred_time_on,int_blue, int_red,
-                             int_farred):
-    if fans_gpio and fans_time_on and fans_time_off and red_gpio and red_time_off and red_time_on and blue_gpio and \
-            blue_time_off and blue_time_on and farred_gpio and farred_time_off and farred_time_on and int_blue and int_red \
-            and int_farred and sensor_fans_gpio and sensor_fans_time_on and sensor_fans_time_off:
-        return False
-    else:
-        return True
-
-def set_gpio_config(fans_gpio, red_gpio, blue_gpio, farred_gpio, sensor_fans_gpio):
-    config = open('config.json.tmp', 'w')
-
-    if fans_gpio == 'old' and sensor_fans_gpio == 'old':
-        base_str = '    { "className": "Fan", "name": "Fan", "pin": 20 },\n' \
-                   '    { "className": "Fan", "name": "Fan", "pin": 21 }\n'
-    else:
-        base_str = '     { "className": "Fan", "name": "Fan", "pin": '+fans_gpio+' },\n' \
-                   '     { "className": "Fan", "name": "Sensor_Fan", "pin": ' + sensor_fans_gpio + ' }\n'
-    config.write('{\n')
-    config.write(' "actuators": [\n')
-    config.write('     { "className": "Led", "name": "Led.Blue", "pin": '+blue_gpio+' },\n')
-    config.write('     { "className": "Led", "name": "Led.Red", "pin": '+red_gpio+' },\n')
-    config.write('     { "className": "Led", "name": "Led.FarRed", "pin": '+farred_gpio+' },\n')
-    config.write(base_str)
-    config.write(' ]\n')
-    config.write('}')
-
-    os.system('mv config.json.tmp /home/pi/astrogeeks-actuator-control/config.json')
-
-def cron_time(on ,off, name, parameter):
-    on = int(on.split(':', 1)[0])
-    off = int(off.split(':', 1)[0])
-
-    if on < off:
-        if on  == off - 1:
-            cmd_on = str(on)
-        else:
-            # for start time the "on" stays the same and "off" is -1
-            cmd_on = str(on) + "-" + str(off-1)
-        if on - 1 <= 0:
-            if off != 23:
-            # edge case
-                cmd_off = str(off) + "-" + "23"
-            else:
-                cmd_off = str(off)
-        else:
-            # for stop time the "start to stop" is the same as original off and the "stop" is on -1
-            cmd_off = str(off) + "-" + "23" + ",0" + "-" + str(on - 1)
-    elif on > off:
-        if off -1 == 0:
-            #edge case
-            cmd_on = str(on) + "-" + "23" + "," + str(off - 1)
-        elif off -1 < 0:
-            cmd_on = str(on)
-        else:
-            cmd_on = str(on) + "-" + "23" + ",0" + "-" + str(off -1)
-        # if the start time and end time result in the same number only use end time for cmd_off
-        if str(off) == str(on-1):
-            cmd_off = str(off)
-        else:
-            cmd_off = str(off) + "-" + str(on-1)
-    else:
-        # the start time is the same as stop time, the assumption is that it should run continuously
-        cmd_on = '*'
-        cmd_off = None
-
-    if cmd_off is not None:
-        os.system('(crontab -u pi -l 2>/home/pi/logschedule.txt; echo \'* '+ cmd_on + ' * * * '
-                  'cd /home/pi/astrogeeks-actuator-control && ./control "'+name+'" '+parameter+' \'; ) '
-                  '|  sort - | uniq - | crontab -u pi - ')
-        if name != "Fan" and name != "Sensor_Fan":
-            os.system('(crontab -u pi -l 2>/home/pi/logschedule.txt; echo \'* '+ cmd_off + ' * * * '
-                      'cd /home/pi/astrogeeks-actuator-control && ./control "'+name+'" 0.0 \'; ) '
-                      '|  sort - | uniq - | crontab -u pi - ')
-        else:
-            os.system('(crontab -u pi -l 2>/home/pi/logschedule.txt; echo \'* '+ cmd_off + ' * * * '
-                      'cd /home/pi/astrogeeks-actuator-control && ./control "'+name+'" 0 \'; ) '
-                      '|  sort - | uniq - | crontab -u pi - ')
-    else:
-        os.system('(crontab -u pi -l 2>/home/pi/logschedule.txt; echo \'* '+ cmd_on + ' * * * '
-                  'cd /home/pi/astrogeeks-actuator-control && ./control "'+name+'" '+parameter+' \'; ) '
-                  '|  sort - | uniq - | crontab -u pi - ')
-    
 def set_ap_client_mode():
     os.system('rm -f /etc/raspiwifi/host_mode')
     os.system('rm /etc/cron.raspiwifi/aphost_bootstrapper')
@@ -409,6 +229,7 @@ def config_file_hash():
         config_hash[line_key] = line_value
 
     return config_hash
+
 
 if __name__ == '__main__':
     config_hash = config_file_hash()

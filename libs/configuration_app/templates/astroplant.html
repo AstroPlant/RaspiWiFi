@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+  <div id="mainContent">
+    <h1>AP Kit Setup</h1>
+    
+    <form action="{{ url_for('save_astroplant') }}" method=post>
+      <ul>
+        <li><label for="mqtt_host">The MQTT host</label></li>
+        <li><input type="text" name="mqtt_host" value="mqtt.astroplant.sda-projects.nl" class="wifiNetworkInputs" required></li>
+        <li><label for="mqtt_port">The MQTT port</label></li>
+        <li><input type="text" name="mqtt_port" value="9998" class="wifiNetworkInputs" required></li>
+
+        <li><label for="auth_serial">Your AstroPlant kit's serial</label></li>
+        <li><input type="text" name="auth_serial", class="wifiNetworkInputs" required></li>
+        <li><label for="auth_secret">Your AstroPlant kit's secret</label></li>
+        <li><input type="text" name="auth_secret", class="wifiNetworkInputs" required></li>
+
+        <li><label for="checkbox">Is the AstroPlant LCD screen connected?</label><input type="checkbox" name="i2c_check" onclick="var input = document.getElementById('lcd_address'); if(this.checked){ input.disabled = false; input.focus();}else{input.disabled=true;}" /></li>
+        <li><label for="I2C_address">LCD I2C address (default value is 0x27):</label><input type="text" id="lcd_address" name="lcd_address" disabled="disabled", class="lcdInputs"/></li>
+        
+        <input type="submit", class="wifiConnectButton">
+      </ul>
+    </form>
+  </div>
+{% endblock %}

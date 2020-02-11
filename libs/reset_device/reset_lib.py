@@ -90,7 +90,6 @@ def reset_to_host_mode():
 		os.system('cp /usr/lib/raspiwifi/reset_device/static_files/dnsmasq.conf /etc/')
 		os.system('cp /usr/lib/raspiwifi/reset_device/static_files/dhcpcd.conf /etc/')
 		os.system('touch /etc/raspiwifi/host_mode')
-		#remove kit_config and reset crontab completely
-		os.system('sudo rm -f /home/pi/astroplant-kit/astroplant_kit/kit_config.json')
-		os.system('crontab -r -u pi')
+		#remove kit_config
+		os.system('sudo rm -f /home/pi/astroplant-kit/kit_config.toml')
 	os.system('reboot')
