@@ -1,17 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheets/bootstrap.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='stylesheets/app.css') }}">
     <title>AP RaspiWiFi Setup</title>
     {% block header %}
     {% endblock %}
-  </head>
-  <body>
+</head>
+
+<body>
+    <header>
+        <div class="navbar navbar-dark bg-dark">
+            <div class="navbar-brand">
+                <img class="mr-2" src="/static/images/icon.png" width="30" height="30" alt="AstroPlant logo">
+                AstroPlant Setup
+            </div>
+        </div>
+    </header>
     {% block body %}
     {% endblock %}
-  </body>
+</body>
+
 </html>

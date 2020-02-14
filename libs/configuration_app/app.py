@@ -15,7 +15,10 @@ def index():
     info = ""
     config_hash = config_file_hash()
 
-    return render_template('app.html', wifi_ap_array = wifi_ap_array, config_hash = config_hash, info = info)
+    return render_template('app.html',
+                           wifi_ap_array=wifi_ap_array,
+                           config_hash=config_hash,
+                           info=info)
 
 
 @app.route('/manual_ssid_entry')
@@ -31,7 +34,9 @@ def enterprise_entry():
 @app.route('/wpa_settings')
 def wpa_settings():
     config_hash = config_file_hash()
-    return render_template('wpa_settings.html', wpa_enabled = config_hash['wpa_enabled'], wpa_key = config_hash['wpa_key'])
+    return render_template('wpa_settings.html',
+                           wpa_enabled=config_hash['wpa_enabled'],
+                           wpa_key=config_hash['wpa_key'])
 
 
 @app.route('/astroplant')
@@ -39,7 +44,7 @@ def astroplant():
     return render_template('astroplant.html')
 
 
-@app.route('/save_credentials', methods = ['GET', 'POST'])
+@app.route('/save_credentials', methods=['GET', 'POST'])
 def save_credentials():
     ssid = request.form.get('ssid', None)
     wifi_key = request.form.get('wifi_key', None)
@@ -52,36 +57,41 @@ def save_credentials():
     else:
         create_wpa_supplicant(ssid, wifi_key)
 
-    return render_template('save_credentials.html', ssid = ssid)
+    return render_template('save_credentials.html', ssid=ssid)
 
 
-@app.route('/save_astroplant', methods = ['GET', 'POST'])
+@app.route('/save_astroplant', methods=['GET', 'POST'])
 def save_astroplant():
     mqtt_host = request.form.get('mqtt_host', None)
     mqtt_port = request.form.get('mqtt_port', None)
     auth_serial = request.form.get('auth_serial', None)
     auth_secret = request.form.get('auth_secret', None)
-    i2c_address = None
-    checked = request.form.get('i2c_check', None)
-    if checked:
-        i2c_address = request.form.get('lcd_address', None)
-        if not i2c_address:
+    lcd_address = None
+    lcd_connected = request.form.get('lcd_connected', None)
+    if lcd_connected:
+        lcd_address = request.form.get('lcd_address', None)
+        if not lcd_address:
             info = "Please enter the I2C address of the LCD screen"
             return render_template('astroplant.html', info=info)
-    create_kit_config(mqtt_host, mqtt_port, auth_serial, auth_secret, i2c_address=i2c_address)
+    create_kit_config(mqtt_host,
+                      mqtt_port,
+                      auth_serial,
+                      auth_secret,
+                      lcd_address=lcd_address)
 
     # Call set_ap_client_mode() in a thread otherwise the reboot will prevent
     # the response from getting to the browser
     def sleep_and_start_ap():
         time.sleep(2)
         set_ap_client_mode()
+
     t = Thread(target=sleep_and_start_ap)
     t.start()
 
     return render_template('completed.html')
 
 
-@app.route('/save_wpa_credentials', methods = ['GET', 'POST'])
+@app.route('/save_wpa_credentials', methods=['GET', 'POST'])
 def save_wpa_credentials():
     config_hash = config_file_hash()
     wpa_enabled = request.form.get('wpa_enabled')
@@ -100,12 +110,13 @@ def save_wpa_credentials():
     t.start()
 
     config_hash = config_file_hash()
-    return render_template('save_wpa_credentials.html', wpa_enabled = config_hash['wpa_enabled'], wpa_key = config_hash['wpa_key'])
-
-
+    return render_template('save_wpa_credentials.html',
+                           wpa_enabled=config_hash['wpa_enabled'],
+                           wpa_key=config_hash['wpa_key'])
 
 
 ######## FUNCTIONS ##########
+
 
 def scan_wifi_networks():
     iwlist_raw = subprocess.Popen(['iwlist', 'scan'], stdout=subprocess.PIPE)
@@ -120,10 +131,12 @@ def scan_wifi_networks():
 
     return ap_array
 
+
 def create_wpa_supplicant(ssid, wifi_key):
     temp_conf_file = open('wpa_supplicant.conf.tmp', 'w')
 
-    temp_conf_file.write('ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\n')
+    temp_conf_file.write(
+        'ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\n')
     temp_conf_file.write('update_config=1\n')
     temp_conf_file.write('\n')
     temp_conf_file.write('network={\n')
@@ -138,12 +151,15 @@ def create_wpa_supplicant(ssid, wifi_key):
 
     temp_conf_file.close
 
-    os.system('mv wpa_supplicant.conf.tmp /etc/wpa_supplicant/wpa_supplicant.conf')
+    os.system(
+        'mv wpa_supplicant.conf.tmp /etc/wpa_supplicant/wpa_supplicant.conf')
+
 
 def create_enterprise_wpa_supplicant(ssid, identity, password):
     temp_conf_file = open('wpa_supplicant.conf.tmp', 'w')
 
-    temp_conf_file.write('ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\n')
+    temp_conf_file.write(
+        'ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\n')
     temp_conf_file.write('update_config=1\n')
     temp_conf_file.write('\n')
     temp_conf_file.write('network={\n')
@@ -160,24 +176,26 @@ def create_enterprise_wpa_supplicant(ssid, identity, password):
 
     temp_conf_file.close
 
+    os.system(
+        'mv wpa_supplicant.conf.tmp /etc/wpa_supplicant/wpa_supplicant.conf')
 
-    os.system('mv wpa_supplicant.conf.tmp /etc/wpa_supplicant/wpa_supplicant.conf')
 
-
-def create_kit_config(mqtt_host, mqtt_port, auth_serial, auth_secret, i2c_address = None):
-    config = (
-        f"[message_broker]\n"
-        f"host = \"{mqtt_host}\"\n"
-        f"port = {mqtt_port}\n"
-        f"\n"
-        f"[message_broker.auth]\n"
-        f"serial = \"{auth_serial}\"\n"
-        f"secret = \"{auth_secret}\"\n"
-        f"\n"
-        f"[debug]\n"
-        f"level = \"INFO\"\n"
-    )
-    if i2c_address is not None:
+def create_kit_config(mqtt_host,
+                      mqtt_port,
+                      auth_serial,
+                      auth_secret,
+                      lcd_address=None):
+    config = (f"[message_broker]\n"
+              f"host = \"{mqtt_host}\"\n"
+              f"port = {mqtt_port}\n"
+              f"\n"
+              f"[message_broker.auth]\n"
+              f"serial = \"{auth_serial}\"\n"
+              f"secret = \"{auth_secret}\"\n"
+              f"\n"
+              f"[debug]\n"
+              f"level = \"INFO\"\n")
+    if lcd_address is not None:
         config += (
             f"\n"
             f"[debug.peripheral_display]\n"
@@ -185,25 +203,29 @@ def create_kit_config(mqtt_host, mqtt_port, auth_serial, auth_secret, i2c_addres
             f"class_name = \"LCD\"\n"
             f"\n"
             f"[debug.peripheral_display.configuration]\n"
-            f"i2cAddress = \"{i2c_address}\"\n"
-        )
+            f"i2cAddress = \"{lcd_address}\"\n")
     with open('kit_config.toml.tmp', 'w') as kit_conf_file:
         kit_conf_file.write(config)
 
     os.system('chown pi:pi kit_config.toml.tmp')
     os.system('mv kit_config.toml.tmp /home/pi/kit_config.toml')
 
+
 def set_ap_client_mode():
     os.system('rm -f /etc/raspiwifi/host_mode')
     os.system('rm /etc/cron.raspiwifi/aphost_bootstrapper')
-    os.system('cp /usr/lib/raspiwifi/reset_device/static_files/apclient_bootstrapper /etc/cron.raspiwifi/')
+    os.system(
+        'cp /usr/lib/raspiwifi/reset_device/static_files/apclient_bootstrapper /etc/cron.raspiwifi/'
+    )
     os.system('chmod +x /etc/cron.raspiwifi/apclient_bootstrapper')
     os.system('mv /etc/dnsmasq.conf.original /etc/dnsmasq.conf')
     os.system('mv /etc/dhcpcd.conf.original /etc/dhcpcd.conf')
     os.system('reboot')
 
+
 def update_wpa(wpa_enabled, wpa_key):
-    with fileinput.FileInput('/etc/raspiwifi/raspiwifi.conf', inplace=True) as raspiwifi_conf:
+    with fileinput.FileInput('/etc/raspiwifi/raspiwifi.conf',
+                             inplace=True) as raspiwifi_conf:
         for line in raspiwifi_conf:
             if 'wpa_enabled=' in line:
                 line_array = line.split('=')
@@ -235,6 +257,8 @@ if __name__ == '__main__':
     config_hash = config_file_hash()
 
     if config_hash['ssl_enabled'] == "1":
-        app.run(host = '0.0.0.0', port = int(config_hash['server_port']), ssl_context='adhoc')
+        app.run(host='0.0.0.0',
+                port=int(config_hash['server_port']),
+                ssl_context='adhoc')
     else:
-        app.run(host = '0.0.0.0', port = int(config_hash['server_port']))
+        app.run(host='0.0.0.0', port=int(config_hash['server_port']))

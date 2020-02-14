@@ -1,25 +1,32 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-  <div id="mainContent">
-    <h1>WPA for Configuration Mode</h1>
-    <div class="wifiIcon"></div>
+<div class="container text-center mt-5 mb-5">
+    <h1>Hotspot security</h1>
+</div>
+<div class="bg-light">
+    <div class="container pt-5 pb-5 mb-3">
+        <div class="text-center">
+            <div class="wifiIcon"></div>
+        </div>
 
-    <div id="wpaCredentialsForm">
-      <form action="{{ url_for('save_wpa_credentials') }}" method=post>
-        <ul>
-          {% if wpa_enabled == '1': %}
-            <li><input type="checkbox" name="wpa_enabled" value="1" class="wpaEnabledCheckbox" checked> WPA On/Off</li>
-          {% else: %}
-            <li><input type="checkbox" name="wpa_enabled" value="1" class="wpaEnabledCheckbox"> WPA On/Off</li>
-          {% endif %}
+        <form action="{{ url_for('save_wpa_credentials') }}" method="post">
+            <div class="form-check">
+                {% if wpa_enabled == '1': %}
+                <input type="checkbox" class="form-check-input" id="wpa_enabled" name="wpa_enabled" value="1" class="wpaEnabledCheckbox" checked>
+                {% else: %}
+                <input type="checkbox" class="form-check-input" id="wpa_enabled" name="wpa_enabled" value="1" class="wpaEnabledCheckbox">
+                {% endif %}
+                <label for="wpa_enabled" class="form-check-label">WPA On/Off</label>
+            </div>
 
-          <li><label for="wpa_key">WPA Key:</label></li>
-          <li><input type="text" name="wpa_key" value={{wpa_key}} class="wifiNetworkInputs"></li>
+            <div class="form-group">
+                <label for="wpa_key">WPA Key:</label>
+                <input type="text" class="form-control" id="wpa_key" name="wpa_key" value="{{wpa_key}}">
+            </div>
 
-          <input type="submit", class="wifiConnectButton">
-        </ul>
-      </form>
+            <input type="submit" class="btn btn-primary" value="Save security settings">
+        </form>
     </div>
-  </div>
+</div>
 {% endblock %}

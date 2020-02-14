@@ -1,43 +1,63 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-  <div id="mainContent">
-    <div id="wpaStatus">
-      <ul>
+<div class="container text-center mt-5">
+    <h1>AstroPlant Setup</h1>
+    <p class="lead">
+        Welcome to the AstroPlant kit setup.
+    </p>
+</div>
+
+<div class="container mt-5 mb-5">
+    <p>We'll start by configuring the Wi-Fi network the kit should use. Then we'll set the kit's credentials as created on the my.astroplant.io website.</p>
+    <p>This hotspot and setup page will reappear if the kit loses internet connectivity. You can also trigger a reset by holding the SW3 button on the kit's shield for ten seconds.</p>
+</div>
+
+<div class="bg-light">
+    <div class="container pt-5 pb-5 mt-3 mb-3">
+        <div class="text-center">
+            <div class="wifiIcon"></div>
+        </div>
+        <div class="info">{{ info }}</div>
+
+        <form action="{{ url_for('save_credentials') }}" method="post">
+            <p>Please enter the Wi-Fi network details below.</p>
+            <div class="form-group">
+                <label for="ssid">Select your Wi-Fi network</label>
+                <select id="ssid" name="ssid" class="form-control">
+                    {% for ssid in wifi_ap_array %}
+                    <option value='{{ ssid }}'>{{ ssid }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="wifi_key">Your Wifi password</label>
+                <input type="password" name="wifi_key" , class="form-control wifi-network-inputs">
+            </div>
+
+            <p>Or:
+                <ul>
+                    <li><a href="{{ url_for('manual_ssid_entry') }}">Manual SSID setup</a></li>
+                    <li><a href="{{ url_for('enterprise_entry') }}">Enterprise (e.g. eduroam) setup</a></li>
+                </ul>
+            </p>
+
+            <input type="submit" class="btn btn-primary" value="Set Wi-Fi details">
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="alert alert-info">
         {% if config_hash['wpa_enabled'] == '1': %}
-          <li><a href="{{ url_for('wpa_settings') }}">Config. Mode WPA: ENABLED</a></li>
-          <li><a href="{{ url_for('wpa_settings') }}">Key: {{ config_hash['wpa_key'] }}</a></li>
+        Configuration password protection is enabled. <a class="alert-link" href="{{ url_for('wpa_settings') }}">Click here for security options.</a>
+        <br />
+        Hotspot Wi-Fi key: {{ config_hash['wpa_key'] }}
         {% endif %}
 
         {% if config_hash['wpa_enabled'] == '0': %}
-          <li><a href="{{ url_for('wpa_settings') }}">Config. Mode WPA: DISABLED</a></li>
-      {% endif %}
-      </ul>
+        Configuration password protection is disabled. <a class="alert-link" href="{{ url_for('wpa_settings') }}">Click here for security options.</a>
+        {% endif %}
     </div>
-
-    <h1>AP WiFi Setup</h1>
-    <div class="wifiIcon"></div>
-    <div><label for="info">{{ info }}</label></div>
-
-    <form action="{{ url_for('save_credentials') }}" method=post>
-      <ul>
-        <li><label for="ssid">Select your WiFi network</label></li>
-
-        <li class="wifiNetwork">
-          <select id="ssid" name="ssid", class="wifiNetworkInputs">
-            {% for ssid in wifi_ap_array %}
-              <option value='{{ ssid }}'>{{ ssid }}</option>
-            {% endfor %}
-          </select>
-        </li>
-
-        <li><a href="{{ url_for('manual_ssid_entry') }}" class="manualSSIDEntry">manual SSID entry -></a></li>
-        <li><a href="{{ url_for('enterprise_entry') }}" class="manualSSIDEntry">enterprise (eduroam) entry -></a></li>
-        <li><label for="wifi_key">Your Wifi password</label></li>
-        <li><input type="password" name="wifi_key", class="wifiNetworkInputs"></li>
-
-        <input type="submit", class="wifiConnectButton">
-      </ul>
-    </form>
-  </div>
+</div>
 {% endblock %}
